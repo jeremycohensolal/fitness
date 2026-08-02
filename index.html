@@ -47,7 +47,7 @@
   /* ---------- En-tête ---------- */
 
   .masthead{
-    padding:calc(env(safe-area-inset-top) + 18px) var(--pad) 12px;
+    padding:calc(env(safe-area-inset-top) + 20px) var(--pad) 16px;
     border-bottom:2px solid var(--ink);
   }
 
@@ -297,41 +297,10 @@
 
   /* ---------- Pied de page ---------- */
 
-  .week{
-    margin:22px 0 0;
-    border-top:2px solid var(--ink);
-    padding:16px var(--pad) 8px;
-  }
-
-  .week h2{
-    margin:0 0 10px;
-    font-size:11px;
-    font-weight:800;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-  }
-
-  .week ol{
-    margin:0;
-    padding:0;
-    list-style:none;
-    font-size:15px;
-  }
-
-  .week li{
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    padding:7px 0;
-    border-bottom:1px solid var(--rule);
-  }
-
-  .week li b{font-weight:800;}
-
-  .week li span{color:var(--ink-soft);}
-
   .actions{
-    padding:16px var(--pad) 34px;
+    margin-top:16px;
+    border-top:2px solid var(--ink);
+    padding:18px var(--pad) 34px;
     display:flex;
     flex-direction:column;
     gap:9px;
@@ -378,7 +347,6 @@
 
 <header class="masthead">
   <h1>Programme élastiques</h1>
-  <p>1 m 82 · 44 ans · Krav maga</p>
 </header>
 
 <nav class="tabs" role="tablist">
@@ -400,26 +368,13 @@
   <section class="panel" id="panel-B" role="tabpanel" aria-labelledby="tab-B" hidden></section>
 </main>
 
-<section class="week">
-  <h2>Rythme de la semaine</h2>
-  <ol>
-    <li><b>Lundi</b><span>Prog 1</span></li>
-    <li><b>Mardi</b><span>Krav / sac</span></li>
-    <li><b>Mercredi</b><span>Prog 2</span></li>
-    <li><b>Jeudi</b><span>Repos ou marche</span></li>
-    <li><b>Vendredi</b><span>Prog 1</span></li>
-    <li><b>Samedi</b><span>Krav / sac</span></li>
-    <li><b>Dimanche</b><span>Prog 2 ou repos</span></li>
-  </ol>
-</section>
-
 <div class="actions">
   <button id="reset-ticks">Décocher tous les exercices</button>
   <button id="reset-bands" class="danger">Effacer les élastiques mémorisés</button>
 </div>
 
 <p class="saved" id="saved"></p>
-<p class="saved">version 4</p>
+<p class="saved">version 5</p>
 
 <script>
 (function(){
