@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E9EAE5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Programme">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Programme — Prog 1 / Prog 2</title>
+<style>
+  :root{
+    --paper:#E9EAE5;
+    --card:#FCFCFA;
+    --ink:#15171A;
+    --ink-soft:#54585A;
+    --rule:#C9CBC4;
+    --rule-strong:#9A9D95;
+
+    --jaune:#EFBC00;
+    --rouge:#CC2A1E;
+    --noir:#1B1D1F;
+    --violet:#6A38A6;
+
+    --pad:16px;
+    --radius:4px;
+  }
+
+  *{box-sizing:border-box;}
+
+  html{-webkit-text-size-adjust:100%;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    font-size:17px;
+    line-height:1.35;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+
+  /* ---------- En-tête ---------- */
+
+  .masthead{
+    padding:calc(env(safe-area-inset-top) + 18px) var(--pad) 12px;
+    border-bottom:2px solid var(--ink);
+  }
+
+  .masthead h1{
+    margin:0;
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    line-height:1.05;
+  }
+
+  .masthead p{
+    margin:6px 0 0;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Onglets ---------- */
+
+  .tabs{
+    position:sticky;
+    top:0;
+    z-index:20;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    background:var(--paper);
+    border-bottom:2px solid var(--ink);
+  }
+
+  .tabs button{
+    appearance:none;
+    border:0;
+    background:transparent;
+    color:var(--ink-soft);
+    font:inherit;
+    font-weight:800;
+    letter-spacing:0.04em;
+    padding:15px 8px 13px;
+    cursor:pointer;
+    border-bottom:4px solid transparent;
+    margin-bottom:-2px;
+    text-align:center;
+  }
+
+  .tabs button .tabname{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    opacity:0.8;
+    margin-top:3px;
+  }
+
+  .tabs button[aria-selected="true"]{
+    color:var(--ink);
+    border-bottom-color:var(--ink);
+  }
+
+  /* ---------- Bandeau règle ---------- */
+
+  .rulebar{
+    padding:11px var(--pad);
+    background:var(--ink);
+    color:var(--paper);
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+  }
+
+  .rulebar span:last-child{opacity:0.75;font-weight:600;}
+
+  /* ---------- Liste ---------- */
+
+  .panel{padding:14px var(--pad) 8px;}
+  .panel[hidden]{display:none;}
+
+  .exo{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    padding:13px 13px 11px;
+    margin-bottom:11px;
+  }
+
+  .exo.is-done{
+    border-color:var(--rule-strong);
+    background:#F0F1EC;
+  }
+
+  .exo.is-done .exo-name{
+    text-decoration:line-through;
+    text-decoration-thickness:2px;
+    color:var(--ink-soft);
+  }
+
+  .exo-top{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .tick{
+    flex:0 0 auto;
+    width:30px;
+    height:30px;
+    margin-top:2px;
+    border:2px solid var(--ink);
+    border-radius:50%;
+    background:transparent;
+    cursor:pointer;
+    padding:0;
+    display:grid;
+    place-items:center;
+    color:transparent;
+    font-size:16px;
+    font-weight:900;
+    line-height:1;
+  }
+
+  .exo.is-done .tick{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  .exo-head{flex:1 1 auto;min-width:0;}
+
+  .exo-group{
+    font-size:10.5px;
+    font-weight:800;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:3px;
+  }
+
+  .exo-name{
+    font-size:19px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+    line-height:1.2;
+    display:block;
+  }
+
+  .exo-note{
+    display:block;
+    margin-top:5px;
+    font-size:14px;
+    color:var(--ink-soft);
+    line-height:1.35;
+  }
+
+  .exo-reps{
+    flex:0 0 auto;
+    text-align:right;
+    font-variant-numeric:tabular-nums;
+    font-size:19px;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    white-space:nowrap;
+    padding-top:14px;
+  }
+
+  .exo-reps small{
+    display:block;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Élastiques ---------- */
+
+  .bands{
+    margin-top:11px;
+    padding-top:10px;
+    border-top:1px solid var(--rule);
+    display:flex;
+    align-items:center;
+    gap:9px;
+    flex-wrap:wrap;
+  }
+
+  .bands-label{
+    font-size:10.5px;
+    font-weight:800;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-right:2px;
+  }
+
+  .band{
+    appearance:none;
+    cursor:pointer;
+    padding:0;
+    width:42px;
+    height:32px;
+    border-radius:16px;
+    border:2px solid var(--c);
+    background:transparent;
+    position:relative;
+    transition:background-color .12s ease, transform .12s ease;
+  }
+
+  .band::after{
+    content:"";
+    position:absolute;
+    inset:5px;
+    border-radius:11px;
+    border:2px solid var(--c);
+    opacity:0.35;
+  }
+
+  .band[aria-pressed="true"]{
+    background:var(--c);
+    transform:scale(1.04);
+  }
+
+  .band[aria-pressed="true"]::after{
+    inset:6px;
+    border-color:var(--card);
+    opacity:0.9;
+  }
+
+  .band[data-band="noir"][aria-pressed="true"]::after{border-color:#B9BCB5;}
+
+  .band-none{
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Pied de page ---------- */
+
+  .week{
+    margin:22px 0 0;
+    border-top:2px solid var(--ink);
+    padding:16px var(--pad) 8px;
+  }
+
+  .week h2{
+    margin:0 0 10px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+  }
+
+  .week ol{
+    margin:0;
+    padding:0;
+    list-style:none;
+    font-size:15px;
+  }
+
+  .week li{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:7px 0;
+    border-bottom:1px solid var(--rule);
+  }
+
+  .week li b{font-weight:800;}
+
+  .week li span{color:var(--ink-soft);}
+
+  .actions{
+    padding:16px var(--pad) 34px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+
+  .actions button{
+    appearance:none;
+    font:inherit;
+    font-size:14px;
+    font-weight:700;
+    padding:13px;
+    border-radius:var(--radius);
+    border:2px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+  }
+
+  .actions .danger{
+    border-color:var(--rule-strong);
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+
+  .saved{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-soft);
+    padding:0 var(--pad) 8px;
+    min-height:18px;
+  }
+
+  :focus-visible{
+    outline:3px solid var(--violet);
+    outline-offset:2px;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <h1>Programme élastiques</h1>
+  <p>1 m 82 · 44 ans · Krav maga</p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" id="tab-A" aria-controls="panel-A" aria-selected="true">
+    Prog 1<span class="tabname">Haut du corps</span>
+  </button>
+  <button role="tab" id="tab-B" aria-controls="panel-B" aria-selected="false">
+    Prog 2<span class="tabname">Bas du corps + tronc</span>
+  </button>
+</nav>
+
+<div class="rulebar">
+  <span>3 séries · repos 60–90 s</span>
+  <span id="progress">0/0</span>
+</div>
+
+<main>
+  <section class="panel" id="panel-A" role="tabpanel" aria-labelledby="tab-A"></section>
+  <section class="panel" id="panel-B" role="tabpanel" aria-labelledby="tab-B" hidden></section>
+</main>
+
+<section class="week">
+  <h2>Rythme de la semaine</h2>
+  <ol>
+    <li><b>Lundi</b><span>Prog 1</span></li>
+    <li><b>Mardi</b><span>Krav / sac</span></li>
+    <li><b>Mercredi</b><span>Prog 2</span></li>
+    <li><b>Jeudi</b><span>Repos ou marche</span></li>
+    <li><b>Vendredi</b><span>Prog 1</span></li>
+    <li><b>Samedi</b><span>Krav / sac</span></li>
+    <li><b>Dimanche</b><span>Prog 2 ou repos</span></li>
+  </ol>
+</section>
+
+<div class="actions">
+  <button id="reset-ticks">Décocher tous les exercices</button>
+  <button id="reset-bands" class="danger">Effacer les élastiques mémorisés</button>
+</div>
+
+<p class="saved" id="saved"></p>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Stockage : localStorage, avec repli mémoire ---------- */
+
+  var mem = {};
+  var store = {
+    get:function(k){
+      try{ return window.localStorage.getItem(k); }
+      catch(e){ return Object.prototype.hasOwnProperty.call(mem,k) ? mem[k] : null; }
+    },
+    set:function(k,v){
+      try{ window.localStorage.setItem(k,v); }
+      catch(e){ mem[k]=v; }
+    },
+    remove:function(k){
+      try{ window.localStorage.removeItem(k); }
+      catch(e){ delete mem[k]; }
+    }
+  };
+
+  var BANDS = [
+    {id:"jaune",  color:"#EFBC00", label:"Jaune"},
+    {id:"rouge",  color:"#CC2A1E", label:"Rouge"},
+    {id:"noir",   color:"#1B1D1F", label:"Noir"},
+    {id:"violet", color:"#6A38A6", label:"Violet"}
+  ];
+
+  var PROGRAMS = {
+    A:[
+      {id:"a1", group:"Poussée", name:"Pompes",
+       reps:"3 × 10–15", unit:"reps", band:true,
+       note:"Élastique dans le dos, passé sous les mains."},
+
+      {id:"a2", group:"Poussée", name:"Développé debout",
+       reps:"3 × 12", unit:"reps", band:true,
+       note:"Élastique dans le dos, tu pousses vers l'avant."},
+
+      {id:"a3", group:"Épaules", name:"Développé au-dessus de la tête",
+       reps:"3 × 12", unit:"reps", band:true,
+       note:"Debout sur l'élastique, tu pousses vers le plafond."},
+
+      {id:"a4", group:"Tirage", name:"Rowing horizontal",
+       reps:"3 × 12", unit:"reps", band:true,
+       note:"Coudes serrés le long du corps, omoplates serrées."},
+
+      {id:"a5", group:"Tirage", name:"Face pull",
+       reps:"3 × 15", unit:"reps", band:true,
+       note:"Tirage vers le visage, coudes hauts. Santé d'épaule."},
+
+      {id:"a6", group:"Bras", name:"Curl biceps",
+       reps:"3 × 12", unit:"reps", band:true,
+       note:"Paumes vers le haut, coudes fixes."},
+
+      {id:"a7", group:"Bras · optionnel", name:"Extension triceps",
+       reps:"3 × 12", unit:"reps", band:true,
+       note:"Élastique ancré en haut, tu tends les bras vers le bas."}
+    ],
+    B:[
+      {id:"b1", group:"Jambes", name:"Squat",
+       reps:"3 × 12–15", unit:"reps", band:true,
+       note:"Debout sur l'élastique, poignées aux épaules."},
+
+      {id:"b2", group:"Jambes · unilatéral", name:"Fentes arrière",
+       reps:"3 × 10", unit:"par jambe", band:true,
+       note:"Toutes les reps d'un côté, puis l'autre. Commence par la jambe faible."},
+
+      {id:"b3", group:"Jambes · unilatéral", name:"Squat bulgare",
+       reps:"3 × 8–10", unit:"par jambe", band:false,
+       note:"Pied arrière sur une chaise. Élastique seulement si le poids du corps devient facile."},
+
+      {id:"b4", group:"Chaîne postérieure", name:"Good morning",
+       reps:"3 × 12", unit:"reps", band:true,
+       note:"Dos plat, tu penches le buste et tu remontes. Ischios et fessiers."},
+
+      {id:"b5", group:"Tronc", name:"Planche",
+       reps:"3 × 45–60", unit:"secondes", band:false,
+       note:"Bassin verrouillé, fessiers serrés."},
+
+      {id:"b6", group:"Tronc · unilatéral", name:"Tirage de côté",
+       reps:"2 × 20", unit:"par côté", band:true,
+       note:"Debout sur l'élastique, inclinaison latérale. Un côté entier, puis l'autre."},
+
+      {id:"b7", group:"Lombaires", name:"Superman",
+       reps:"2 × 15", unit:"reps", band:false,
+       note:"À plat ventre, relevé du buste. Sans à-coups."}
+    ]
+  };
+
+  /* ---------- Coches : remises à zéro chaque nouveau jour ---------- */
+
+  var today = new Date().toISOString().slice(0,10);
+  var ticks = {};
+  try{
+    var raw = store.get("prog.ticks");
+    var parsed = raw ? JSON.parse(raw) : null;
+    if(parsed && parsed.date === today){ ticks = parsed.done || {}; }
+  }catch(e){ ticks = {}; }
+
+  function saveTicks(){
+    store.set("prog.ticks", JSON.stringify({date:today, done:ticks}));
+    flash("Enregistré");
+  }
+
+  function getBands(id){
+    try{
+      var v = store.get("prog.band." + id);
+      return v ? JSON.parse(v) : [];
+    }catch(e){ return []; }
+  }
+
+  function setBands(id, list){
+    store.set("prog.band." + id, JSON.stringify(list));
+    flash("Élastique enregistré");
+  }
+
+  var flashTimer = null;
+  function flash(msg){
+    var el = document.getElementById("saved");
+    el.textContent = msg;
+    if(flashTimer){ clearTimeout(flashTimer); }
+    flashTimer = setTimeout(function(){ el.textContent = ""; }, 1600);
+  }
+
+  /* ---------- Rendu ---------- */
+
+  function buildExo(exo){
+    var card = document.createElement("article");
+    card.className = "exo";
+    card.dataset.id = exo.id;
+    if(ticks[exo.id]){ card.classList.add("is-done"); }
+
+    var top = document.createElement("div");
+    top.className = "exo-top";
+
+    var tick = document.createElement("button");
+    tick.className = "tick";
+    tick.type = "button";
+    tick.textContent = "\u2713";
+    tick.setAttribute("aria-pressed", ticks[exo.id] ? "true" : "false");
+    tick.setAttribute("aria-label", "Marquer « " + exo.name + " » comme fait");
+    tick.addEventListener("click", function(){
+      var now = !ticks[exo.id];
+      if(now){ ticks[exo.id] = true; } else { delete ticks[exo.id]; }
+      card.classList.toggle("is-done", now);
+      tick.setAttribute("aria-pressed", now ? "true" : "false");
+      saveTicks();
+      updateProgress();
+    });
+
+    var head = document.createElement("div");
+    head.className = "exo-head";
+
+    var group = document.createElement("span");
+    group.className = "exo-group";
+    group.textContent = exo.group;
+
+    var name = document.createElement("span");
+    name.className = "exo-name";
+    name.textContent = exo.name;
+
+    var note = document.createElement("span");
+    note.className = "exo-note";
+    note.textContent = exo.note;
+
+    head.appendChild(group);
+    head.appendChild(name);
+    head.appendChild(note);
+
+    var reps = document.createElement("div");
+    reps.className = "exo-reps";
+    reps.appendChild(document.createTextNode(exo.reps));
+    var unit = document.createElement("small");
+    unit.textContent = exo.unit;
+    reps.appendChild(unit);
+
+    top.appendChild(tick);
+    top.appendChild(head);
+    top.appendChild(reps);
+    card.appendChild(top);
+
+    var row = document.createElement("div");
+    row.className = "bands";
+
+    var label = document.createElement("span");
+    label.className = "bands-label";
+    label.textContent = "Élastique";
+    row.appendChild(label);
+
+    if(!exo.band){
+      var none = document.createElement("span");
+      none.className = "band-none";
+      none.textContent = "Poids du corps";
+      row.appendChild(none);
+      card.appendChild(row);
+      return card;
+    }
+
+    var selected = getBands(exo.id);
+
+    BANDS.forEach(function(b){
+      var btn = document.createElement("button");
+      btn.className = "band";
+      btn.type = "button";
+      btn.dataset.band = b.id;
+      btn.style.setProperty("--c", b.color);
+      btn.setAttribute("aria-label", b.label + " — " + exo.name);
+      btn.setAttribute("aria-pressed", selected.indexOf(b.id) !== -1 ? "true" : "false");
+
+      btn.addEventListener("click", function(){
+        var list = getBands(exo.id);
+        var i = list.indexOf(b.id);
+        if(i === -1){ list.push(b.id); } else { list.splice(i,1); }
+        list.sort(function(x,y){
+          return BANDS.map(function(z){return z.id;}).indexOf(x) -
+                 BANDS.map(function(z){return z.id;}).indexOf(y);
+        });
+        setBands(exo.id, list);
+        btn.setAttribute("aria-pressed", list.indexOf(b.id) !== -1 ? "true" : "false");
+      });
+
+      row.appendChild(btn);
+    });
+
+    card.appendChild(row);
+    return card;
+  }
+
+  function render(){
+    ["A","B"].forEach(function(key){
+      var panel = document.getElementById("panel-" + key);
+      panel.textContent = "";
+      PROGRAMS[key].forEach(function(exo){
+        panel.appendChild(buildExo(exo));
+      });
+    });
+    updateProgress();
+  }
+
+  /* ---------- Onglets ---------- */
+
+  var current = store.get("prog.tab") === "B" ? "B" : "A";
+
+  function selectTab(key){
+    current = key;
+    store.set("prog.tab", key);
+    ["A","B"].forEach(function(k){
+      var isOn = (k === key);
+      document.getElementById("tab-" + k).setAttribute("aria-selected", isOn ? "true" : "false");
+      document.getElementById("panel-" + k).hidden = !isOn;
+    });
+    updateProgress();
+    window.scrollTo(0,0);
+  }
+
+  ["A","B"].forEach(function(k){
+    document.getElementById("tab-" + k).addEventListener("click", function(){ selectTab(k); });
+  });
+
+  function updateProgress(){
+    var list = PROGRAMS[current];
+    var done = list.filter(function(e){ return ticks[e.id]; }).length;
+    document.getElementById("progress").textContent = done + "/" + list.length;
+  }
+
+  /* ---------- Boutons de remise à zéro ---------- */
+
+  document.getElementById("reset-ticks").addEventListener("click", function(){
+    ticks = {};
+    saveTicks();
+    render();
+  });
+
+  document.getElementById("reset-bands").addEventListener("click", function(){
+    if(!window.confirm("Effacer tous les élastiques mémorisés ?")){ return; }
+    ["A","B"].forEach(function(k){
+      PROGRAMS[k].forEach(function(e){ store.remove("prog.band." + e.id); });
+    });
+    render();
+    flash("Élastiques effacés");
+  });
+
+  render();
+  selectTab(current);
+
+  /* ---------- Hors connexion (ignoré si sw.js est absent) ---------- */
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){ /* sans effet */ });
+    });
+  }
+})();
+</script>
+</body>
+</html>
