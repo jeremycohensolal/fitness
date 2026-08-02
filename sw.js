@@ -1,6 +1,6 @@
 /* Programme élastiques — cache hors connexion */
 
-var CACHE = "programme-v1";
+var CACHE = "programme-v2";
 
 var ASSETS = [
   "./",
