@@ -416,6 +416,7 @@
 </div>
 
 <p class="saved" id="saved"></p>
+<p class="saved">version 3</p>
 
 <script>
 (function(){
@@ -706,8 +707,19 @@
   /* ---------- Hors connexion (ignoré si sw.js est absent) ---------- */
 
   if("serviceWorker" in navigator){
+    var refreshing = false;
+
+    navigator.serviceWorker.addEventListener("controllerchange", function(){
+      if(refreshing){ return; }
+      refreshing = true;
+      window.location.reload();
+    });
+
     window.addEventListener("load", function(){
-      navigator.serviceWorker.register("sw.js").catch(function(){ /* sans effet */ });
+      navigator.serviceWorker.register("sw.js").then(function(reg){
+        reg.update();
+        setInterval(function(){ reg.update(); }, 60 * 60 * 1000);
+      }).catch(function(){ /* sans effet */ });
     });
   }
 })();

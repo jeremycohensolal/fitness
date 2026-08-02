@@ -1,6 +1,10 @@
-/* Programme élastiques — cache hors connexion */
+/* Programme élastiques — cache hors connexion (v3)
+   Stratégie :
+   - Page HTML : réseau d'abord, cache en secours -> les mises à jour arrivent seules.
+   - Icônes / manifeste : cache d'abord, rafraîchis en arrière-plan.
+*/
 
-var CACHE = "programme-v2";
+var CACHE = "programme-v3";
 
 var ASSETS = [
   "./",
@@ -32,23 +36,42 @@ self.addEventListener("activate", function(e){
   );
 });
 
-/* Cache d'abord : la page s'ouvre instantanément, même sans réseau. */
+function isPage(req){
+  return req.mode === "navigate" || req.destination === "document";
+}
+
 self.addEventListener("fetch", function(e){
-  if(e.request.method !== "GET"){ return; }
+  var req = e.request;
+  if(req.method !== "GET"){ return; }
 
-  e.respondWith(
-    caches.match(e.request).then(function(hit){
-      if(hit){ return hit; }
-
-      return fetch(e.request).then(function(res){
-        if(res && res.status === 200 && res.type === "basic"){
-          var copy = res.clone();
-          caches.open(CACHE).then(function(c){ c.put(e.request, copy); });
-        }
+  /* La page : on tente toujours le réseau en premier. */
+  if(isPage(req)){
+    e.respondWith(
+      fetch(req).then(function(res){
+        var copy = res.clone();
+        caches.open(CACHE).then(function(c){ c.put("./index.html", copy); });
         return res;
       }).catch(function(){
-        return caches.match("./index.html");
-      });
+        return caches.match("./index.html").then(function(hit){
+          return hit || caches.match("./");
+        });
+      })
+    );
+    return;
+  }
+
+  /* Le reste : cache d'abord, mais on rafraîchit en silence. */
+  e.respondWith(
+    caches.match(req).then(function(hit){
+      var live = fetch(req).then(function(res){
+        if(res && res.status === 200 && res.type === "basic"){
+          var copy = res.clone();
+          caches.open(CACHE).then(function(c){ c.put(req, copy); });
+        }
+        return res;
+      }).catch(function(){ return hit; });
+
+      return hit || live;
     })
   );
 });
