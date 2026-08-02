@@ -4,7 +4,7 @@
    - Icônes / manifeste : cache d'abord, rafraîchis en arrière-plan.
 */
 
-var CACHE = "programme-v3";
+var CACHE = "programme-v4";
 
 var ASSETS = [
   "./",
