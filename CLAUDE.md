@@ -10,7 +10,10 @@ sans build, déployée sur GitHub Pages : https://jeremycohensolal.github.io/fit
 - **Mobile d'abord.** L'app est utilisée au téléphone, souvent installée sur l'écran d'accueil
   iOS. Cibles tactiles ≥ 30 px, `env(safe-area-inset-*)` respecté, layout en une colonne.
 - **Aucune donnée personnelle.** Tout l'état reste en `localStorage`. Pas de backend, pas
-  d'analytics, pas de tracker, pas de requête réseau vers un tiers.
+  d'analytics, pas de tracker, pas de requête réseau vers un tiers. Le dépôt est public :
+  les données du pratiquant vivent dans `PERSO.md`, gitignoré, et n'en sortent jamais.
+- **Un programme existant ne se modifie que sur demande explicite.** Les `id` d'exercice sont
+  des clés de `localStorage` : y toucher casse des réglages accumulés séance après séance.
 - **Chemins relatifs uniquement** (`./index.html`, `icon-180.png`). Le site est servi depuis le
   sous-chemin `/fitness/` : un chemin absolu `/...` casse tout.
 
@@ -23,6 +26,8 @@ sans build, déployée sur GitHub Pages : https://jeremycohensolal.github.io/fit
 | `sw.js` | Service worker. Page = réseau d'abord ; assets = cache d'abord + rafraîchissement silencieux. |
 | `manifest.webmanifest` | Manifeste PWA. |
 | `icon-180.png`, `icon-512.png` | Icônes (iOS / PWA). |
+| `PERSO.md` | Profil, matériel et planning du pratiquant. **Gitignoré — ne jamais le commiter ni recopier son contenu dans un fichier versionné.** Source de vérité pour tout le coaching. |
+| `.claude/skills/coach/` | Skill de coaching : règles de programmation, catalogue d'exercices, format des fichiers `programmes/`. |
 
 ## À faire à chaque modification de l'app
 
@@ -48,6 +53,14 @@ renommé, l'inscrire aussi dans `ASSETS` de `sw.js`.
 
 Le sélecteur de programme apparaît tout seul dès qu'il y a plus d'un programme ; il reste
 masqué s'il n'y en a qu'un. Rien d'autre à toucher dans `index.html`.
+
+## Concevoir un entraînement
+
+Tout ce qui touche au contenu des séances — choix des exercices, séries, reps, progression,
+répartition de la semaine — passe par le skill `coach` (`.claude/skills/coach/`). Il porte le
+cadre : séances le matin au lever, 25 minutes maximum, pratiquant débutant en muscu et en
+kettlebell. Le profil et le planning, eux, ne sont pas dans le skill — ils se lisent dans
+`PERSO.md`, qui ne doit jamais être commité.
 
 ## Conventions de code
 
