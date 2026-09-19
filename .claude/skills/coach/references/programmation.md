@@ -110,9 +110,10 @@ L'élastique n'a pas de plaques : la progression passe par d'autres leviers, dan
    et sans coûter une seconde de plus si le nombre de reps baisse en conséquence.
 3. **Augmenter la pré-tension ou l'amplitude** — reculer d'un pas, raccourcir l'ancrage,
    augmenter le débattement.
-4. **Cumuler un élastique de plus.** L'app le permet : le sélecteur de couleurs est
-   multi-sélection, on peut cocher jaune + rouge sur un même exercice. C'est le vrai saut de
-   charge.
+4. **Cumuler un élastique de plus.** L'app le permet : le sélecteur est multi-sélection, on
+   peut cocher jaune + rouge sur un même exercice. C'est le vrai saut de charge. Les couleurs
+   disponibles sont **jaune, rouge, noir, violet, vert** — les cinq de l'app, pas une de plus ;
+   leur résistance réelle, elle, n'est connue que si `PERSO.md` la donne.
 5. **Passer en unilatéral** — un bras, une jambe : double la charge relative sans matériel
    supplémentaire, et ajoute une demande anti-rotation utile en combat. Attention au budget
    temps : un exercice unilatéral coûte deux fois plus de minutes.

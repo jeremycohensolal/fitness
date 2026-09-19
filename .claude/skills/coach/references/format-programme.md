@@ -4,6 +4,9 @@
 rendre le fichier. Le modèle de référence est `programmes/01-elastique.js` : ouvre-le, copie-le,
 modifie la copie. Ne réécris jamais la structure de mémoire.
 
+Attention : `01-elastique.js` est le modèle de **forme**, jamais de **dosage**. Il date d'avant
+le cadre 25 minutes (7 exercices par séance) — copie son style, pas son volume.
+
 ## Comment l'app charge les programmes
 
 Un fichier par programme dans `programmes/`, nommé `NN-nom.js` — **le préfixe numérique fixe
@@ -22,6 +25,11 @@ Indentation, alignement des commentaires, absence d'espace après les `:`, ligne
 exercices : tout est significatif. Le fichier produit doit être indiscernable, en style, de
 `01-elastique.js`.
 
+**C'est un squelette de mise en forme, pas une proposition d'entraînement.** Les noms, les
+séries et les reps qui y figurent sont des remplissages neutres, volontairement : un gabarit qui
+ressemble à un programme fini finit recopié tel quel, et personne n'a conçu la séance. Reprends
+sa forme, conçois son contenu.
+
 ```js
 /* Programme <nom> — données seules, aucun code d'application ici.
    Pour ajouter un programme : copier ce fichier, changer « id » et « name »,
@@ -32,29 +40,29 @@ exercices : tout est significatif. Le fichier produit doit être indiscernable, 
   window.PROGRAMMES = window.PROGRAMMES || [];
 
   window.PROGRAMMES.push({
-    id:"kettlebell",                 /* clé de stockage — ne jamais renommer */
-    name:"Kettlebell",               /* libellé dans le sélecteur */
-    title:"Programme kettlebell",    /* <h1> et <title> */
-    rule:"25 min · repos 60 s",      /* bandeau règle */
+    id:"exemple",               /* clé de stockage — ne jamais renommer */
+    name:"Exemple",             /* libellé dans le sélecteur */
+    title:"Programme exemple",  /* <h1> et <title> */
+    rule:"25 min · repos 60 s", /* bandeau règle, repos toujours chiffré */
     seances:[
       {
-        id:"A", tab:"Prog 1", label:"Haut du corps",
+        id:"A", tab:"Prog 1", label:"Première séance",
         exos:[
-          {id:"k1", group:"Hinge · explosif", name:"Swing à deux mains",
-           reps:"4 × 15", unit:"reps", band:false,
-           note:"Le geste vient des hanches, pas des bras."},
+          {id:"x1", group:"Groupe", name:"Premier exercice",
+           reps:"4 × 8", unit:"reps", band:false,
+           note:"Le cue d'exécution, en une phrase."},
 
-          {id:"k2", group:"Épaules", name:"Press militaire",
-           reps:"3 × 8", unit:"par bras", band:false,
-           note:"Gainage serré, tu pousses vers le plafond sans cambrer."}
+          {id:"x2", group:"Groupe · qualificatif", name:"Deuxième exercice",
+           reps:"3 × 10–15", unit:"par bras", band:true,
+           note:"Un seul repère à retenir, qui décrit le geste."}
         ]
       },
       {
-        id:"B", tab:"Prog 2", label:"Bas du corps + tronc",
+        id:"B", tab:"Prog 2", label:"Deuxième séance",
         exos:[
-          {id:"k3", group:"Jambes", name:"Goblet squat",
-           reps:"4 × 10", unit:"reps", band:false,
-           note:"Kettlebell contre la poitrine, coudes à l'intérieur des genoux en bas."}
+          {id:"x3", group:"Groupe", name:"Troisième exercice",
+           reps:"3 × 45–60", unit:"secondes", band:false,
+           note:"Ce que le corps fait, pas ce que le muscle ressent."}
         ]
       }
     ]
@@ -77,7 +85,8 @@ exercices : tout est significatif. Le fichier produit doit être indiscernable, 
   3. ` note:…},` — même alignement
 - **Une ligne vide entre deux exercices**, aucune après le dernier.
 - **Typographie française** : `×` (U+00D7) pour la multiplication, `–` (tiret demi-cadratin)
-  pour les fourchettes, `·` pour les séparateurs de `group`, apostrophes courbes `'`.
+  pour les fourchettes, `·` pour les séparateurs de `group`, et l'apostrophe **droite** `'` —
+  celle de `01-elastique.js`, jamais la courbe.
 - **ES5 strict** : `var`, `function(){}`. Pas de `let`, pas d'arrow function, pas de module,
   aucune dépendance. Français partout, commentaires compris.
 
@@ -141,17 +150,30 @@ Dans cet ordre, **dans le même commit** :
 
 ## Contrôle avant de rendre
 
-Relis le fichier produit et vérifie, une par une :
+D'abord le vérificateur. Il passe en une seconde, depuis la racine du dépôt :
 
-- [ ] `node --check programmes/NN-nom.js` passe (ou à défaut, aucune erreur dans la console).
-- [ ] Tous les `id` d'exercice sont uniques dans le programme.
-- [ ] Chaque `reps` est une **chaîne**, avec `×` et `–`.
-- [ ] Chaque `unit` fait partie de la liste autorisée.
-- [ ] Chaque exercice non-élastique a `band:false`.
-- [ ] Chaque `note` tient en une phrase.
-- [ ] Une ligne vide entre chaque exercice, aucune virgule finale parasite.
-- [ ] Aucune donnée personnelle nulle part.
-- [ ] Les trois autres fichiers (`index.html`, `sw.js` ×2) sont à jour.
+```sh
+node .claude/skills/coach/scripts/verifier-programme.js programmes/NN-nom.js
+```
+
+Il contrôle la syntaxe, l'unicité des `id`, la typographie de `reps`, les `unit` autorisées, le
+type de `band`, la longueur des `note`, la mise en forme (deux-points, virgules finales, lignes
+vides, alignement), l'absence de donnée personnelle, la déclaration du fichier dans `index.html`
+et dans `ASSETS` de `sw.js`, et le bump de version des deux côtés. Tant qu'il sort en erreur, le
+fichier n'est pas prêt — inutile de relire le reste.
+
+Ensuite, ce qu'aucun script ne peut voir. Relis et vérifie, une par une :
+
+- [ ] La séance tient vraiment dans 25 minutes, échauffement et repos compris — refais le calcul
+      à voix haute, un exercice unilatéral compte double.
+- [ ] 3 à 5 exercices par séance, **un seul** mouvement lourd, le reste en superset.
+- [ ] Chaque `note` est exécutable seul à 7 h du matin sans rien savoir : elle décrit un geste,
+      pas une sensation.
+- [ ] Aucun exercice marqué ⛔ dans `references/exercices.md` (clean, snatch, get-up) : le
+      pratiquant est débutant.
+- [ ] `unit` dit les côtés (`"par jambe"`, `"par bras"`, `"par côté"`) dès que l'exercice est
+      unilatéral — c'est le seul endroit où l'app le signale.
+- [ ] Un mouvement balistique n'est ni en premier à froid, ni en dernier sur fatigue.
 
 Puis, dans le navigateur :
 
