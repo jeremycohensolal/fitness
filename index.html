@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<title>Programme — Prog 1 / Prog 2</title>
+<title>Programme</title>
 <style>
   :root{
     --paper:#E9EAE5;
@@ -49,14 +49,39 @@
   .masthead{
     padding:calc(env(safe-area-inset-top) + 20px) var(--pad) 16px;
     border-bottom:2px solid var(--ink);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
   }
 
   .masthead h1{
     margin:0;
+    flex:1 1 auto;
     font-size:30px;
     font-weight:800;
     letter-spacing:-0.02em;
     line-height:1.05;
+  }
+
+  .masthead select{
+    appearance:none;
+    -webkit-appearance:none;
+    flex:0 0 auto;
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    background:var(--card);
+    color:var(--ink);
+    font:inherit;
+    font-size:14px;
+    font-weight:700;
+    padding:7px 10px;
+    min-height:34px;
+    cursor:pointer;
+  }
+
+  .masthead select[hidden]{
+    display:none;
   }
 
   .masthead p{
@@ -75,7 +100,8 @@
     top:0;
     z-index:20;
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-auto-flow:column;
+    grid-auto-columns:1fr;
     background:var(--paper);
     border-bottom:2px solid var(--ink);
   }
@@ -346,27 +372,19 @@
 <body>
 
 <header class="masthead">
-  <h1>Programme élastiques</h1>
+  <h1 id="title"></h1>
+  <select id="prog-select" aria-label="Programme" hidden></select>
 </header>
 
-<nav class="tabs" role="tablist">
-  <button role="tab" id="tab-A" aria-controls="panel-A" aria-selected="true">
-    Prog 1<span class="tabname">Haut du corps</span>
-  </button>
-  <button role="tab" id="tab-B" aria-controls="panel-B" aria-selected="false">
-    Prog 2<span class="tabname">Bas du corps + tronc</span>
-  </button>
-</nav>
+<!-- Onglets et panneaux : construits en JS à partir du programme courant. -->
+<nav class="tabs" role="tablist" id="tabs"></nav>
 
 <div class="rulebar">
-  <span>3 séries · repos 60–90 s</span>
+  <span id="rule"></span>
   <span id="progress">0/0</span>
 </div>
 
-<main>
-  <section class="panel" id="panel-A" role="tabpanel" aria-labelledby="tab-A"></section>
-  <section class="panel" id="panel-B" role="tabpanel" aria-labelledby="tab-B" hidden></section>
-</main>
+<main id="panels"></main>
 
 <div class="actions">
   <button id="reset-ticks">Décocher tous les exercices</button>
@@ -374,7 +392,11 @@
 </div>
 
 <p class="saved" id="saved"></p>
-<p class="saved">version 5</p>
+<p class="saved">version 7</p>
+
+<!-- Un fichier par programme. Ajouter un programme = ajouter une ligne ici
+     (et la même dans ASSETS de sw.js). -->
+<script src="programmes/01-elastique.js"></script>
 
 <script>
 (function(){
@@ -406,91 +428,101 @@
     {id:"vert",   color:"#1E8A4C", label:"Vert"}
   ];
 
-  var PROGRAMS = {
-    A:[
-      {id:"a1", group:"Poussée", name:"Pompes",
-       reps:"3 × 10–15", unit:"reps", band:true,
-       note:"Élastique dans le dos, passé sous les mains."},
+  /* ---------- Programmes : un fichier par programme dans « programmes/ » ---------- */
 
-      {id:"a2", group:"Poussée", name:"Développé debout",
-       reps:"3 × 12", unit:"reps", band:true,
-       note:"Élastique dans le dos, tu pousses vers l'avant."},
+  var PROGS = window.PROGRAMMES || [];
 
-      {id:"a3", group:"Épaules", name:"Développé au-dessus de la tête",
-       reps:"3 × 12", unit:"reps", band:true,
-       note:"Debout sur l'élastique, tu pousses vers le plafond."},
+  if(!PROGS.length){
+    document.getElementById("saved").textContent =
+      "Aucun programme chargé — vérifie le dossier « programmes ».";
+    return;
+  }
 
-      {id:"a4", group:"Tirage", name:"Rowing horizontal",
-       reps:"3 × 12", unit:"reps", band:true,
-       note:"Coudes serrés le long du corps, omoplates serrées."},
+  function pickProg(id){
+    var found = null;
+    PROGS.forEach(function(p){ if(p.id === id){ found = p; } });
+    return found || PROGS[0];
+  }
 
-      {id:"a5", group:"Tirage", name:"Face pull",
-       reps:"3 × 15", unit:"reps", band:true,
-       note:"Tirage vers le visage, coudes hauts. Santé d'épaule."},
+  /* ---------- Migration unique des réglages d'avant les programmes ---------- */
 
-      {id:"a6", group:"Bras", name:"Curl biceps",
-       reps:"3 × 12", unit:"reps", band:true,
-       note:"Paumes vers le haut, coudes fixes."},
+  function migrate(){
+    if(store.get("prog.migrated.v6")){ return; }
 
-      {id:"a7", group:"Bras · optionnel", name:"Extension triceps",
-       reps:"3 × 12", unit:"reps", band:true,
-       note:"Élastique ancré en haut, tu tends les bras vers le bas."}
-    ],
-    B:[
-      {id:"b1", group:"Jambes", name:"Squat",
-       reps:"3 × 12–15", unit:"reps", band:true,
-       note:"Debout sur l'élastique, poignées aux épaules."},
+    var legacy = null;
+    PROGS.forEach(function(p){ if(p.id === "elastiques"){ legacy = p; } });
 
-      {id:"b2", group:"Jambes · unilatéral", name:"Fentes arrière",
-       reps:"3 × 10", unit:"par jambe", band:true,
-       note:"Toutes les reps d'un côté, puis l'autre. Commence par la jambe faible."},
+    if(legacy){
+      legacy.seances.forEach(function(s){
+        s.exos.forEach(function(e){
+          var bands = store.get("prog.band." + e.id);
+          if(bands !== null){
+            store.set("prog.band.elastiques." + e.id, bands);
+            store.remove("prog.band." + e.id);
+          }
+        });
+      });
 
-      {id:"b3", group:"Jambes · unilatéral", name:"Squat bulgare",
-       reps:"3 × 8–10", unit:"par jambe", band:true,
-       note:"Pied arrière sur une chaise. Debout sur l'élastique, poignées aux épaules."},
+      var oldTicks = store.get("prog.ticks");
+      if(oldTicks !== null){
+        store.set("prog.ticks.elastiques", oldTicks);
+        store.remove("prog.ticks");
+      }
 
-      {id:"b4", group:"Chaîne postérieure", name:"Good morning",
-       reps:"3 × 12", unit:"reps", band:true,
-       note:"Dos plat, tu penches le buste et tu remontes. Ischios et fessiers."},
+      var oldTab = store.get("prog.tab");
+      if(oldTab !== null){
+        store.set("prog.tab.elastiques", oldTab);
+        store.remove("prog.tab");
+      }
+    }
 
-      {id:"b5", group:"Tronc", name:"Planche",
-       reps:"3 × 45–60", unit:"secondes", band:false,
-       note:"Bassin verrouillé, fessiers serrés."},
+    store.set("prog.migrated.v6", "1");
+  }
 
-      {id:"b6", group:"Tronc · unilatéral", name:"Tirage de côté",
-       reps:"2 × 20", unit:"par côté", band:true,
-       note:"Debout sur l'élastique, inclinaison latérale. Un côté entier, puis l'autre."},
+  migrate();
 
-      {id:"b7", group:"Lombaires", name:"Superman",
-       reps:"2 × 15", unit:"reps", band:false,
-       note:"À plat ventre, relevé du buste. Sans à-coups."}
-    ]
-  };
+  /* ---------- Programme courant et clés de stockage qui en découlent ---------- */
+
+  var prog = pickProg(store.get("prog.current"));
+
+  function seance(key){
+    var found = null;
+    prog.seances.forEach(function(s){ if(s.id === key){ found = s; } });
+    return found || prog.seances[0];
+  }
+
+  function bandKey(exoId){ return "prog.band." + prog.id + "." + exoId; }
+  function ticksKey(){ return "prog.ticks." + prog.id; }
+  function tabKey(){ return "prog.tab." + prog.id; }
 
   /* ---------- Coches : remises à zéro chaque nouveau jour ---------- */
 
   var today = new Date().toISOString().slice(0,10);
-  var ticks = {};
-  try{
-    var raw = store.get("prog.ticks");
-    var parsed = raw ? JSON.parse(raw) : null;
-    if(parsed && parsed.date === today){ ticks = parsed.done || {}; }
-  }catch(e){ ticks = {}; }
+  var ticks = loadTicks();
+
+  function loadTicks(){
+    try{
+      var raw = store.get(ticksKey());
+      var parsed = raw ? JSON.parse(raw) : null;
+      if(parsed && parsed.date === today){ return parsed.done || {}; }
+    }catch(e){ /* stockage illisible : on repart à vide */ }
+    return {};
+  }
 
   function saveTicks(){
-    store.set("prog.ticks", JSON.stringify({date:today, done:ticks}));
+    store.set(ticksKey(), JSON.stringify({date:today, done:ticks}));
     flash("Enregistré");
   }
 
   function getBands(id){
     try{
-      var v = store.get("prog.band." + id);
+      var v = store.get(bandKey(id));
       return v ? JSON.parse(v) : [];
     }catch(e){ return []; }
   }
 
   function setBands(id, list){
-    store.set("prog.band." + id, JSON.stringify(list));
+    store.set(bandKey(id), JSON.stringify(list));
     flash("Élastique enregistré");
   }
 
@@ -607,40 +639,102 @@
   }
 
   function render(){
-    ["A","B"].forEach(function(key){
-      var panel = document.getElementById("panel-" + key);
-      panel.textContent = "";
-      PROGRAMS[key].forEach(function(exo){
-        panel.appendChild(buildExo(exo));
+    document.title = prog.title;
+    document.getElementById("title").textContent = prog.title;
+    document.getElementById("rule").textContent = prog.rule;
+
+    var tabs = document.getElementById("tabs");
+    var panels = document.getElementById("panels");
+    tabs.textContent = "";
+    panels.textContent = "";
+
+    prog.seances.forEach(function(s){
+      var tab = document.createElement("button");
+      tab.type = "button";
+      tab.id = "tab-" + s.id;
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", "panel-" + s.id);
+      tab.setAttribute("aria-selected", "false");
+      tab.appendChild(document.createTextNode(s.tab));
+
+      var sub = document.createElement("span");
+      sub.className = "tabname";
+      sub.textContent = s.label;
+      tab.appendChild(sub);
+
+      tab.addEventListener("click", function(){
+        selectTab(s.id);
+        window.scrollTo(0,0);
       });
+      tabs.appendChild(tab);
+
+      var panel = document.createElement("section");
+      panel.className = "panel";
+      panel.id = "panel-" + s.id;
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", "tab-" + s.id);
+      panel.hidden = true;
+      s.exos.forEach(function(exo){ panel.appendChild(buildExo(exo)); });
+      panels.appendChild(panel);
     });
-    updateProgress();
+
+    selectTab(current);
   }
 
   /* ---------- Onglets ---------- */
 
-  var current = store.get("prog.tab") === "B" ? "B" : "A";
+  var current = storedTab();
 
-  function selectTab(key){
-    current = key;
-    store.set("prog.tab", key);
-    ["A","B"].forEach(function(k){
-      var isOn = (k === key);
-      document.getElementById("tab-" + k).setAttribute("aria-selected", isOn ? "true" : "false");
-      document.getElementById("panel-" + k).hidden = !isOn;
-    });
-    updateProgress();
-    window.scrollTo(0,0);
+  function storedTab(){
+    var key = store.get(tabKey());
+    var found = null;
+    prog.seances.forEach(function(s){ if(s.id === key){ found = s.id; } });
+    return found || prog.seances[0].id;
   }
 
-  ["A","B"].forEach(function(k){
-    document.getElementById("tab-" + k).addEventListener("click", function(){ selectTab(k); });
-  });
+  function selectTab(key){
+    current = seance(key).id;
+    store.set(tabKey(), current);
+    prog.seances.forEach(function(s){
+      var isOn = (s.id === current);
+      document.getElementById("tab-" + s.id).setAttribute("aria-selected", isOn ? "true" : "false");
+      document.getElementById("panel-" + s.id).hidden = !isOn;
+    });
+    updateProgress();
+  }
 
   function updateProgress(){
-    var list = PROGRAMS[current];
+    var list = seance(current).exos;
     var done = list.filter(function(e){ return ticks[e.id]; }).length;
     document.getElementById("progress").textContent = done + "/" + list.length;
+  }
+
+  /* ---------- Sélecteur de programme ---------- */
+
+  var progSelect = document.getElementById("prog-select");
+
+  PROGS.forEach(function(p){
+    var opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = p.name;
+    progSelect.appendChild(opt);
+  });
+
+  progSelect.value = prog.id;
+  progSelect.hidden = PROGS.length < 2;
+
+  progSelect.addEventListener("change", function(){
+    selectProg(progSelect.value);
+  });
+
+  function selectProg(id){
+    prog = pickProg(id);
+    store.set("prog.current", prog.id);
+    progSelect.value = prog.id;
+    ticks = loadTicks();
+    current = storedTab();
+    render();
+    window.scrollTo(0,0);
   }
 
   /* ---------- Boutons de remise à zéro ---------- */
@@ -652,16 +746,15 @@
   });
 
   document.getElementById("reset-bands").addEventListener("click", function(){
-    if(!window.confirm("Effacer tous les élastiques mémorisés ?")){ return; }
-    ["A","B"].forEach(function(k){
-      PROGRAMS[k].forEach(function(e){ store.remove("prog.band." + e.id); });
+    if(!window.confirm("Effacer tous les élastiques mémorisés de ce programme ?")){ return; }
+    prog.seances.forEach(function(s){
+      s.exos.forEach(function(e){ store.remove(bandKey(e.id)); });
     });
     render();
     flash("Élastiques effacés");
   });
 
   render();
-  selectTab(current);
 
   /* ---------- Hors connexion (ignoré si sw.js est absent) ---------- */
 

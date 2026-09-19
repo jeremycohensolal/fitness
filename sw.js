@@ -1,15 +1,18 @@
-/* Programme élastiques — cache hors connexion (v3)
+/* Programme — cache hors connexion
    Stratégie :
    - Page HTML : réseau d'abord, cache en secours -> les mises à jour arrivent seules.
-   - Icônes / manifeste : cache d'abord, rafraîchis en arrière-plan.
+   - Programmes / icônes / manifeste : cache d'abord, rafraîchis en arrière-plan.
+   Tout nouveau fichier programmes/*.js doit être ajouté à ASSETS, inscrit en
+   <script src> dans index.html, et accompagné d'un bump de CACHE.
 */
 
-var CACHE = "programme-v5";
+var CACHE = "programme-v7";
 
 var ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./programmes/01-elastique.js",
   "./icon-180.png",
   "./icon-512.png"
 ];
