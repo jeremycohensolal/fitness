@@ -44,6 +44,27 @@ une résistance : tant que `PERSO.md` ne dit pas à quoi correspond chaque coule
 repère de sensation (« l'élastique avec lequel tu finis la série à deux reps de la fin »), pas
 en couleur.
 
+**Vérifie les ancrages d'élastique disponibles dans `PERSO.md` avant de choisir un exercice.**
+Un élastique se tend contre quelque chose, et ce quelque chose n'est pas toujours là. Trois
+familles : **sans ancrage** (sous les pieds, dans le dos, tenu à deux mains, autour des pieds
+assis au sol), **ancrage bas ou de côté**, **ancrage haut**. Les deux dernières supposent une
+porte, une barre ou un point fixe.
+
+Si `PERSO.md` exclut l'ancrage de porte ou de point fixe, alors **tout exercice qui demande
+d'accrocher l'élastique est hors catalogue** — pas « à adapter », hors catalogue : ni pallof
+press ancré, ni tirage vertical, ni face pull ancré, ni extension triceps ancrée en haut.
+`references/exercices.md` donne l'ancrage requis de chaque exercice et la substitution sans
+ancrage quand elle existe. Ne propose jamais « tu peux coincer l'élastique dans une porte » en
+solution de repli : c'est justement ce qui est exclu.
+
+**L'app gère aussi la kettlebell, dans le même programme et la même séance qu'un élastique.**
+Chaque exercice déclare son matériel dans le champ `charge` : `["elastique"]`, `["kettlebell"]`,
+les deux, ou `[]` pour le poids du corps — la carte affiche un bloc de réglage par matériel.
+Le sélecteur de kettlebell est **exclusif** (une seule cloche à la fois), contrairement aux
+élastiques qui se cumulent. Les poids qu'il propose sont une liste générique d'`index.html` :
+ceux réellement possédés se lisent dans `PERSO.md` et ne s'écrivent **jamais** dans un fichier
+versionné. Le détail du champ est dans `references/format-programme.md`.
+
 ## Cadre non négociable
 
 - **Séance le matin, au lever.** Corps froid : échauffement obligatoire, pas de flexion lombaire
@@ -98,7 +119,7 @@ commentaires, l'absence d'espace après les `:`, la ligne vide entre deux exerci
 découpage d'un exercice sur trois lignes sont tous significatifs.
 
 Avant de rendre, lance le vérificateur. Il attrape en une seconde tout ce qui est mécanique —
-erreur de syntaxe, `id` dupliqué, `unit` hors liste, `band` incohérent, fichier non déclaré dans
+erreur de syntaxe, `id` dupliqué, `unit` hors liste, `charge` incohérente, fichier non déclaré dans
 `index.html` ou dans `sw.js`, versions non bumpées :
 
 ```sh

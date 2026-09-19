@@ -14,6 +14,7 @@ var child = require("child_process");
 
 var RACINE = path.resolve(__dirname, "..", "..", "..", "..");
 var UNITES = ["reps", "par jambe", "par bras", "par côté", "secondes"];
+var MATERIELS = ["elastique", "kettlebell"];
 var JOURS = /\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\b/i;
 
 var erreurs = [];
@@ -74,7 +75,7 @@ if(source.indexOf('"use strict";') === -1){
 if(source.indexOf("window.PROGRAMMES = window.PROGRAMMES || [];") === -1){
   ko("il manque la ligne window.PROGRAMMES = window.PROGRAMMES || [];");
 }
-if(/\b(id|group|name|reps|unit|band|note|tab|label|title|rule|seances|exos):\s/.test(source)){
+if(/\b(id|group|name|reps|unit|charge|band|note|tab|label|title|rule|seances|exos):\s/.test(source)){
   ko("espace après des deux-points : écrire id:\"k1\", jamais id: \"k1\"");
 }
 if(/,(\s*[\]}])/.test(source)){
@@ -86,7 +87,7 @@ if(/\},\r?\n[ \t]*\{id:/.test(source)){
 if(/’/.test(source)){
   ko("apostrophe courbe (’) : 01-elastique.js n'utilise que l'apostrophe droite (')");
 }
-if(/(let |const |=>)/.test(source)){
+if(/\b(let|const)\s|=>/.test(source)){
   ko("ES5 uniquement : pas de let, pas de const, pas d'arrow function");
 }
 if(/'/.test(source.replace(/[a-zA-ZÀ-ÿ]'[a-zA-ZÀ-ÿ]/g, ""))){
@@ -144,7 +145,23 @@ if(prog){
       if(UNITES.indexOf(e.unit) === -1){
         ko(ou + ' : unit="' + e.unit + '" hors liste (' + UNITES.join(", ") + ")");
       }
-      if(typeof e.band !== "boolean") ko(ou + " : band doit être true ou false");
+      if(e.charge !== undefined){
+        if(e.band !== undefined){
+          ko(ou + " : charge et band ensemble — charge remplace band, garder charge seul");
+        }
+        if(!Array.isArray(e.charge)){
+          ko(ou + ' : charge doit être un tableau, ex. charge:["kettlebell"]');
+        } else {
+          e.charge.forEach(function(m){
+            if(MATERIELS.indexOf(m) === -1){
+              ko(ou + ' : charge "' + m + '" hors liste (' + MATERIELS.join(", ") + ")");
+            }
+          });
+        }
+      } else if(typeof e.band !== "boolean"){
+        ko(ou + ' : charge manquante — charge:["kettlebell"], ["elastique"], les deux, ou [] ' +
+              "(band:true/false n'est toléré que dans les programmes hérités)");
+      }
 
       if(typeof e.note !== "string" || !e.note) ko(ou + " : note manquante");
       else {

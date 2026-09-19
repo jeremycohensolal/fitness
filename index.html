@@ -321,6 +321,33 @@
     color:var(--ink-soft);
   }
 
+  /* ---------- Kettlebell ---------- */
+
+  .kb{
+    appearance:none;
+    cursor:pointer;
+    padding:0;
+    flex:1 1 0;
+    min-width:0;
+    max-width:60px;
+    height:34px;
+    border-radius:17px;
+    border:2px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    font:inherit;
+    font-size:14px;
+    font-weight:800;
+    font-variant-numeric:tabular-nums;
+    transition:background-color .12s ease, transform .12s ease;
+  }
+
+  .kb[aria-pressed="true"]{
+    background:var(--ink);
+    color:var(--paper);
+    transform:scale(1.04);
+  }
+
   /* ---------- Pied de page ---------- */
 
   .actions{
@@ -388,15 +415,16 @@
 
 <div class="actions">
   <button id="reset-ticks">Décocher tous les exercices</button>
-  <button id="reset-bands" class="danger">Effacer les élastiques mémorisés</button>
+  <button id="reset-charges" class="danger">Effacer les charges mémorisées</button>
 </div>
 
 <p class="saved" id="saved"></p>
-<p class="saved">version 7</p>
+<p class="saved">version 8</p>
 
 <!-- Un fichier par programme. Ajouter un programme = ajouter une ligne ici
      (et la même dans ASSETS de sw.js). -->
 <script src="programmes/01-elastique.js"></script>
+<script src="programmes/02-kettlebell.js"></script>
 
 <script>
 (function(){
@@ -426,6 +454,14 @@
     {id:"noir",   color:"#1B1D1F", label:"Noir"},
     {id:"violet", color:"#6A38A6", label:"Violet"},
     {id:"vert",   color:"#1E8A4C", label:"Vert"}
+  ];
+
+  var KETTLEBELLS = [
+    {id:"8",  label:"8"},
+    {id:"12", label:"12"},
+    {id:"16", label:"16"},
+    {id:"20", label:"20"},
+    {id:"24", label:"24"}
   ];
 
   /* ---------- Programmes : un fichier par programme dans « programmes/ » ---------- */
@@ -492,6 +528,7 @@
   }
 
   function bandKey(exoId){ return "prog.band." + prog.id + "." + exoId; }
+  function kbKey(exoId){ return "prog.kb." + prog.id + "." + exoId; }
   function ticksKey(){ return "prog.ticks." + prog.id; }
   function tabKey(){ return "prog.tab." + prog.id; }
 
@@ -526,12 +563,116 @@
     flash("Élastique enregistré");
   }
 
+  /* Une seule kettlebell à la fois : on stocke un poids, pas une liste. */
+
+  function getKb(id){
+    return store.get(kbKey(id)) || "";
+  }
+
+  function setKb(id, poids){
+    if(poids){ store.set(kbKey(id), poids); } else { store.remove(kbKey(id)); }
+    flash(poids ? "Kettlebell enregistrée" : "Kettlebell effacée");
+  }
+
   var flashTimer = null;
   function flash(msg){
     var el = document.getElementById("saved");
     el.textContent = msg;
     if(flashTimer){ clearTimeout(flashTimer); }
     flashTimer = setTimeout(function(){ el.textContent = ""; }, 1600);
+  }
+
+  /* ---------- Matériel d'un exercice ---------- */
+
+  /* « charge » liste le matériel de l'exercice : ["elastique"], ["kettlebell"],
+     les deux, ou [] pour le poids du corps. Les programmes antérieurs n'ont que
+     « band » : true vaut ["elastique"], false vaut []. */
+
+  function chargeDe(exo){
+    if(exo.charge){ return exo.charge; }
+    return exo.band ? ["elastique"] : [];
+  }
+
+  function buildRow(labelText){
+    var row = document.createElement("div");
+    row.className = "bands";
+
+    var label = document.createElement("span");
+    label.className = "bands-label";
+    label.textContent = labelText;
+    row.appendChild(label);
+
+    return row;
+  }
+
+  function rowPoidsDuCorps(){
+    var row = buildRow("Charge");
+
+    var none = document.createElement("span");
+    none.className = "band-none";
+    none.textContent = "Poids du corps";
+    row.appendChild(none);
+
+    return row;
+  }
+
+  function rowElastiques(exo){
+    var row = buildRow("Élastique");
+    var selected = getBands(exo.id);
+
+    BANDS.forEach(function(b){
+      var btn = document.createElement("button");
+      btn.className = "band";
+      btn.type = "button";
+      btn.dataset.band = b.id;
+      btn.style.setProperty("--c", b.color);
+      btn.setAttribute("aria-label", b.label + " — " + exo.name);
+      btn.setAttribute("aria-pressed", selected.indexOf(b.id) !== -1 ? "true" : "false");
+
+      btn.addEventListener("click", function(){
+        var list = getBands(exo.id);
+        var i = list.indexOf(b.id);
+        if(i === -1){ list.push(b.id); } else { list.splice(i,1); }
+        list.sort(function(x,y){
+          return BANDS.map(function(z){return z.id;}).indexOf(x) -
+                 BANDS.map(function(z){return z.id;}).indexOf(y);
+        });
+        setBands(exo.id, list);
+        btn.setAttribute("aria-pressed", list.indexOf(b.id) !== -1 ? "true" : "false");
+      });
+
+      row.appendChild(btn);
+    });
+
+    return row;
+  }
+
+  function rowKettlebell(exo){
+    var row = buildRow("Kettlebell");
+    var boutons = [];
+
+    KETTLEBELLS.forEach(function(k){
+      var btn = document.createElement("button");
+      btn.className = "kb";
+      btn.type = "button";
+      btn.dataset.kb = k.id;
+      btn.textContent = k.label;
+      btn.setAttribute("aria-label", "Kettlebell de " + k.label + " kilos — " + exo.name);
+      btn.setAttribute("aria-pressed", getKb(exo.id) === k.id ? "true" : "false");
+
+      btn.addEventListener("click", function(){
+        var choisi = getKb(exo.id) === k.id ? "" : k.id;
+        setKb(exo.id, choisi);
+        boutons.forEach(function(b){
+          b.setAttribute("aria-pressed", b.dataset.kb === choisi ? "true" : "false");
+        });
+      });
+
+      boutons.push(btn);
+      row.appendChild(btn);
+    });
+
+    return row;
   }
 
   /* ---------- Rendu ---------- */
@@ -591,50 +732,12 @@
     top.appendChild(reps);
     card.appendChild(top);
 
-    var row = document.createElement("div");
-    row.className = "bands";
+    var kit = chargeDe(exo);
 
-    var label = document.createElement("span");
-    label.className = "bands-label";
-    label.textContent = "Élastique";
-    row.appendChild(label);
+    if(!kit.length){ card.appendChild(rowPoidsDuCorps()); }
+    if(kit.indexOf("elastique") !== -1){ card.appendChild(rowElastiques(exo)); }
+    if(kit.indexOf("kettlebell") !== -1){ card.appendChild(rowKettlebell(exo)); }
 
-    if(!exo.band){
-      var none = document.createElement("span");
-      none.className = "band-none";
-      none.textContent = "Poids du corps";
-      row.appendChild(none);
-      card.appendChild(row);
-      return card;
-    }
-
-    var selected = getBands(exo.id);
-
-    BANDS.forEach(function(b){
-      var btn = document.createElement("button");
-      btn.className = "band";
-      btn.type = "button";
-      btn.dataset.band = b.id;
-      btn.style.setProperty("--c", b.color);
-      btn.setAttribute("aria-label", b.label + " — " + exo.name);
-      btn.setAttribute("aria-pressed", selected.indexOf(b.id) !== -1 ? "true" : "false");
-
-      btn.addEventListener("click", function(){
-        var list = getBands(exo.id);
-        var i = list.indexOf(b.id);
-        if(i === -1){ list.push(b.id); } else { list.splice(i,1); }
-        list.sort(function(x,y){
-          return BANDS.map(function(z){return z.id;}).indexOf(x) -
-                 BANDS.map(function(z){return z.id;}).indexOf(y);
-        });
-        setBands(exo.id, list);
-        btn.setAttribute("aria-pressed", list.indexOf(b.id) !== -1 ? "true" : "false");
-      });
-
-      row.appendChild(btn);
-    });
-
-    card.appendChild(row);
     return card;
   }
 
@@ -745,13 +848,16 @@
     render();
   });
 
-  document.getElementById("reset-bands").addEventListener("click", function(){
-    if(!window.confirm("Effacer tous les élastiques mémorisés de ce programme ?")){ return; }
+  document.getElementById("reset-charges").addEventListener("click", function(){
+    if(!window.confirm("Effacer toutes les charges mémorisées de ce programme ?")){ return; }
     prog.seances.forEach(function(s){
-      s.exos.forEach(function(e){ store.remove(bandKey(e.id)); });
+      s.exos.forEach(function(e){
+        store.remove(bandKey(e.id));
+        store.remove(kbKey(e.id));
+      });
     });
     render();
-    flash("Élastiques effacés");
+    flash("Charges effacées");
   });
 
   render();

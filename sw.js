@@ -6,13 +6,14 @@
    <script src> dans index.html, et accompagné d'un bump de CACHE.
 */
 
-var CACHE = "programme-v7";
+var CACHE = "programme-v8";
 
 var ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./programmes/01-elastique.js",
+  "./programmes/02-kettlebell.js",
   "./icon-180.png",
   "./icon-512.png"
 ];

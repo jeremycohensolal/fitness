@@ -5,7 +5,9 @@ rendre le fichier. Le modèle de référence est `programmes/01-elastique.js` : 
 modifie la copie. Ne réécris jamais la structure de mémoire.
 
 Attention : `01-elastique.js` est le modèle de **forme**, jamais de **dosage**. Il date d'avant
-le cadre 25 minutes (7 exercices par séance) — copie son style, pas son volume.
+le cadre 25 minutes (7 exercices par séance) — copie son style, pas son volume. Il précède aussi
+le champ `charge` et utilise encore l'ancien `band` : pour ce champ-là, le modèle à jour est
+`programmes/02-kettlebell.js`.
 
 ## Comment l'app charge les programmes
 
@@ -49,11 +51,11 @@ sa forme, conçois son contenu.
         id:"A", tab:"Prog 1", label:"Première séance",
         exos:[
           {id:"x1", group:"Groupe", name:"Premier exercice",
-           reps:"4 × 8", unit:"reps", band:false,
+           reps:"4 × 8", unit:"reps", charge:["kettlebell"],
            note:"Le cue d'exécution, en une phrase."},
 
           {id:"x2", group:"Groupe · qualificatif", name:"Deuxième exercice",
-           reps:"3 × 10–15", unit:"par bras", band:true,
+           reps:"3 × 10–15", unit:"par bras", charge:["elastique"],
            note:"Un seul repère à retenir, qui décrit le geste."}
         ]
       },
@@ -61,7 +63,7 @@ sa forme, conçois son contenu.
         id:"B", tab:"Prog 2", label:"Deuxième séance",
         exos:[
           {id:"x3", group:"Groupe", name:"Troisième exercice",
-           reps:"3 × 45–60", unit:"secondes", band:false,
+           reps:"3 × 45–60", unit:"secondes", charge:[],
            note:"Ce que le corps fait, pas ce que le muscle ressent."}
         ]
       }
@@ -81,7 +83,7 @@ sa forme, conçois son contenu.
 - **Commentaires des quatre premières clés alignés** en colonne, comme dans le modèle.
 - **Un exercice tient sur trois lignes**, toujours découpées de la même façon :
   1. `{id:…, group:…, name:…,`
-  2. ` reps:…, unit:…, band:…,` — alignée sous le `i` de `id` (11 espaces)
+  2. ` reps:…, unit:…, charge:…,` — alignée sous le `i` de `id` (11 espaces)
   3. ` note:…},` — même alignement
 - **Une ligne vide entre deux exercices**, aucune après le dernier.
 - **Typographie française** : `×` (U+00D7) pour la multiplication, `–` (tiret demi-cadratin)
@@ -99,19 +101,27 @@ sa forme, conçois son contenu.
 | `name` | chaîne | Nom de l'exercice, en français. |
 | `reps` | **chaîne** | Pas un nombre. Format `"3 × 12"` ou `"3 × 10–15"`. |
 | `unit` | chaîne | Affiché sous les reps. Valeurs utilisées : `"reps"`, `"par jambe"`, `"par bras"`, `"par côté"`, `"secondes"`. |
-| `band` | booléen | `true` ⇒ sélecteur de couleurs d'élastique. `false` ⇒ affiche « Poids du corps ». |
+| `charge` | tableau | Le matériel de l'exercice, dans l'ordre d'affichage : `["elastique"]`, `["kettlebell"]`, `["kettlebell","elastique"]`, ou `[]` ⇒ « Poids du corps ». Un bloc de réglage mémorisé par matériel. |
+| `band` | booléen | **Hérité, à ne plus écrire.** `01-elastique.js` l'utilise encore : `true` vaut `["elastique"]`, `false` vaut `[]`. Jamais `charge` et `band` sur le même exercice. |
 | `note` | chaîne | **Une phrase, un seul cue**, en langage courant — elle est lue par un débutant, seul, à 7 h du matin. Décris le geste, pas la sensation. Pas de paragraphe : la carte se lit sur un téléphone. |
 
 ### Points d'attention
 
 - **Le nombre de séances n'est pas limité à deux** — l'app construit un onglet par entrée de
   `seances`. Mais sur mobile, au-delà de trois onglets ça devient serré.
-- Les `id` d'exercice servent de clés de stockage sous `prog.band.<progId>.<exoId>` et dans
-  `prog.ticks.<progId>`. Renommer un `id` rattache un ancien réglage au mauvais exercice.
+- Les `id` d'exercice servent de clés de stockage sous `prog.band.<progId>.<exoId>`,
+  `prog.kb.<progId>.<exoId>` et dans `prog.ticks.<progId>`. Renommer un `id` rattache un ancien
+  réglage au mauvais exercice.
 - Les élastiques sont **cumulables** : le sélecteur stocke une liste de couleurs. C'est le
   levier de progression en charge — inutile de créer un exercice « version lourde ».
-- `band:false` pour tout ce qui est kettlebell ou poids du corps : le sélecteur de couleurs n'a
-  pas de sens là.
+- La kettlebell, non : le sélecteur de poids est **exclusif**, une seule cloche à la fois. Les
+  poids proposés sont ceux du tableau `KETTLEBELLS` d'`index.html` — n'écris **jamais** un poids
+  en kilos dans un `programmes/*.js` ni dans une `note` : c'est un réglage que le pratiquant
+  coche, et le matériel réellement possédé est une donnée de `PERSO.md`.
+- **Élastique et kettlebell peuvent coexister** : dans un même programme, dans une même séance,
+  et même sur un même exercice (`charge:["kettlebell","elastique"]` affiche les deux blocs).
+  Ne t'en sers que si l'exercice combine vraiment les deux.
+- `charge:[]` pour le poids du corps : aucun sélecteur, la carte affiche « Poids du corps ».
 - `rule` est le seul endroit de l'app où le temps de repos est écrit : il doit y être
   **chiffré** (`"25 min · repos 60 s"`), jamais « repos court ».
 - **Les côtés passent par `unit`**, pas par la note : `"par jambe"`, `"par bras"`, `"par côté"`.
@@ -180,4 +190,7 @@ Puis, dans le navigateur :
 - Le programme apparaît dans le sélecteur, ses onglets se construisent, aucune erreur console.
 - Cocher un exercice puis recharger : la coche persiste (elle se remet à zéro le lendemain).
 - Sélectionner une couleur d'élastique puis recharger : la sélection persiste.
+- Sur un exercice kettlebell, cocher un poids puis recharger : il persiste, et cocher un autre
+  poids remplace le premier au lieu de s'y ajouter.
+- Sur un exercice `charge:[]`, la carte affiche « Poids du corps » et aucun sélecteur.
 - Les réglages de l'autre programme n'ont pas bougé.

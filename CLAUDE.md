@@ -81,14 +81,23 @@ kettlebell. Le profil et le planning, eux, ne sont pas dans le skill — ils se 
   le `<title>`, `rule` le bandeau noir.
 - Une séance = `{id, tab, label, exos}` — `tab` et `label` sont les deux lignes de l'onglet.
   Le nombre de séances est libre (1, 2, 3…) ; les onglets sont générés à partir de cette liste.
-- Un exercice = `{id, group, name, reps, unit, band, note}`. `band:false` ⇒ affiche
-  « Poids du corps » au lieu du sélecteur d'élastiques.
-- Les `id` de programme (`elastiques`) et d'exercice (`a1`…`a7`, `b1`…`b7`) sont les clés de
-  `localStorage` : **ne jamais les réutiliser ni les renommer**, sous peine de rattacher un
-  ancien réglage au mauvais exercice.
+- Un exercice = `{id, group, name, reps, unit, charge, note}`. `charge` liste le matériel :
+  `["elastique"]`, `["kettlebell"]`, les deux (un bloc de réglage par matériel, dans cet ordre),
+  ou `[]` ⇒ affiche « Poids du corps ».
+- **`band` est l'ancien champ, conservé pour les programmes antérieurs** : `band:true` vaut
+  `["elastique"]`, `band:false` vaut `[]`. Un nouveau programme utilise `charge`, jamais les
+  deux ensemble. Ne pas retirer ce repli tant que `01-elastique.js` est en place.
+- Les deux catalogues de charge sont en dur dans `index.html` : `BANDS` (cinq couleurs,
+  **cumulables** — le sélecteur mémorise une liste) et `KETTLEBELLS` (poids en kilos,
+  **exclusifs** — une seule cloche à la fois). Aucun poids de kettlebell dans les
+  `programmes/*.js` : c'est un réglage, pas une donnée de programme.
+- Les `id` de programme (`elastiques`, `kettlebell`) et d'exercice (`a1`…`a7`, `b1`…`b7`,
+  `k1`…`k9`) sont les clés de `localStorage` : **ne jamais les réutiliser ni les renommer**,
+  sous peine de rattacher un ancien réglage au mauvais exercice.
 - Clés `localStorage`, toutes préfixées par le programme :
   `prog.current` (id du programme affiché), `prog.ticks.<progId>` (`{date, done}`, remis à zéro
-  chaque jour), `prog.band.<progId>.<exoId>` (liste d'ids d'élastiques), `prog.tab.<progId>`.
+  chaque jour), `prog.band.<progId>.<exoId>` (liste d'ids d'élastiques),
+  `prog.kb.<progId>.<exoId>` (un poids de kettlebell), `prog.tab.<progId>`.
 - `prog.migrated.v6` marque la migration unique depuis les anciennes clés non préfixées
   (`prog.ticks`, `prog.band.<exoId>`, `prog.tab`). Ne pas supprimer ce code tant que des
   téléphones peuvent encore porter l'ancien stockage.
