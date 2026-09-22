@@ -2,16 +2,18 @@
    Stratégie :
    - Page HTML : réseau d'abord, cache en secours -> les mises à jour arrivent seules.
    - Programmes / icônes / manifeste : cache d'abord, rafraîchis en arrière-plan.
-   Tout nouveau fichier programmes/*.js doit être ajouté à ASSETS, inscrit en
-   <script src> dans index.html, et accompagné d'un bump de CACHE.
+   Tout nouveau fichier programmes/*.js — et aides.js — doit être ajouté à
+   ASSETS, inscrit en <script src> dans index.html, et accompagné d'un bump
+   de CACHE.
 */
 
-var CACHE = "programme-v8";
+var CACHE = "programme-v9";
 
 var ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./aides.js",
   "./programmes/01-elastique.js",
   "./programmes/02-kettlebell.js",
   "./icon-180.png",

@@ -23,6 +23,7 @@ sans build, déployée sur GitHub Pages : https://jeremycohensolal.github.io/fit
 |---|---|
 | `index.html` | L'app : HTML, CSS (`<style>`), JS (`<script>` en IIFE). Aucune donnée d'exercice. |
 | `programmes/NN-nom.js` | Un fichier par programme : titre, règle, onglets, exercices. Chargés par `<script src>`. Le préfixe numérique fixe l'ordre du sélecteur. |
+| `aides.js` | Le contenu des fiches « Comment faire ? », indexé par clé d'aide. Partagé par tous les programmes. |
 | `sw.js` | Service worker. Page = réseau d'abord ; assets = cache d'abord + rafraîchissement silencieux. |
 | `manifest.webmanifest` | Manifeste PWA. |
 | `icon-180.png`, `icon-512.png` | Icônes (iOS / PWA). |
@@ -45,11 +46,13 @@ renommé, l'inscrire aussi dans `ASSETS` de `sw.js`.
    dans le sélecteur).
 2. L'inclure dans `index.html` : `<script src="programmes/NN-nom.js"></script>`, avant le
    `<script>` de l'app. L'ordre des `<script>` est l'ordre du sélecteur.
-3. L'ajouter à `ASSETS` dans `sw.js` : `"./programmes/NN-nom.js"`.
+3. Écrire l'aide de chaque exercice dans `aides.js`, et relier l'exercice par son champ
+   `aide`. Réutiliser une clé existante si l'exercice figure déjà dans un autre programme.
+4. L'ajouter à `ASSETS` dans `sw.js` : `"./programmes/NN-nom.js"`.
    Renommer un fichier de programme compte aussi : mettre à jour les deux endroits.
    Le `id` du programme, lui, est une clé de `localStorage` : il ne suit pas le nom du
    fichier et ne doit jamais changer.
-4. Bumper la version (voir ci-dessus).
+5. Bumper la version (voir ci-dessus).
 
 Le sélecteur de programme apparaît tout seul dès qu'il y a plus d'un programme ; il reste
 masqué s'il n'y en a qu'un. Rien d'autre à toucher dans `index.html`.
@@ -81,7 +84,7 @@ kettlebell. Le profil et le planning, eux, ne sont pas dans le skill — ils se 
   le `<title>`, `rule` le bandeau noir.
 - Une séance = `{id, tab, label, exos}` — `tab` et `label` sont les deux lignes de l'onglet.
   Le nombre de séances est libre (1, 2, 3…) ; les onglets sont générés à partir de cette liste.
-- Un exercice = `{id, group, name, reps, unit, charge, note}`. `charge` liste le matériel :
+- Un exercice = `{id, group, name, reps, unit, charge, note, aide}`. `charge` liste le matériel :
   `["elastique"]`, `["kettlebell"]`, les deux (un bloc de réglage par matériel, dans cet ordre),
   ou `[]` ⇒ affiche « Poids du corps ».
 - **`band` est l'ancien champ, conservé pour les programmes antérieurs** : `band:true` vaut
@@ -94,6 +97,10 @@ kettlebell. Le profil et le planning, eux, ne sont pas dans le skill — ils se 
 - Les `id` de programme (`elastiques`, `kettlebell`) et d'exercice (`a1`…`a7`, `b1`…`b7`,
   `k1`…`k9`) sont les clés de `localStorage` : **ne jamais les réutiliser ni les renommer**,
   sous peine de rattacher un ancien réglage au mauvais exercice.
+- `aide` est la clé d'une entrée de `aides.js` — le contenu de la fiche ouverte par le bouton
+  « Comment faire ? ». Deux programmes qui partagent un exercice partagent la même clé : on ne
+  duplique jamais le texte. Clé absente du catalogue ⇒ la carte n'affiche pas de bouton, sans
+  erreur. Une entrée = `{titre, resume, installation[], mouvement[], reglage[], rate[], pourquoi}`.
 - Clés `localStorage`, toutes préfixées par le programme :
   `prog.current` (id du programme affiché), `prog.ticks.<progId>` (`{date, done}`, remis à zéro
   chaque jour), `prog.band.<progId>.<exoId>` (liste d'ids d'élastiques),

@@ -49,6 +49,17 @@ function charger(fichiers){
   return bac.window.PROGRAMMES || [];
 }
 
+/* catalogue d'aides : sert à vérifier que chaque clé « aide » existe */
+var AIDES = {};
+try {
+  var bacAides = {window:{}};
+  vm.createContext(bacAides);
+  vm.runInContext(fs.readFileSync(path.join(RACINE, "aides.js"), "utf8"), bacAides, {filename:"aides.js"});
+  AIDES = bacAides.window.AIDES || {};
+} catch(e){
+  attention("aides.js illisible (" + e.message + ") : les clés « aide » ne sont pas vérifiées");
+}
+
 var prog = null;
 try {
   var seul = charger([chemin]);
@@ -75,7 +86,7 @@ if(source.indexOf('"use strict";') === -1){
 if(source.indexOf("window.PROGRAMMES = window.PROGRAMMES || [];") === -1){
   ko("il manque la ligne window.PROGRAMMES = window.PROGRAMMES || [];");
 }
-if(/\b(id|group|name|reps|unit|charge|band|note|tab|label|title|rule|seances|exos):\s/.test(source)){
+if(/\b(id|group|name|reps|unit|charge|band|note|aide|tab|label|title|rule|seances|exos):\s/.test(source)){
   ko("espace après des deux-points : écrire id:\"k1\", jamais id: \"k1\"");
 }
 if(/,(\s*[\]}])/.test(source)){
@@ -100,14 +111,14 @@ lignes.forEach(function(l, i){
   var m = l.match(/^(\s*)\{id:/);
   if(!m) return;
   var colonne = m[1].length + 1;
-  [1, 2].forEach(function(d){
+  [1, 2, 3].forEach(function(d){
     var suite = lignes[i + d];
     if(suite === undefined) return;
-    if(!/^\s*(reps|note):/.test(suite)) return;
+    if(!/^\s*(reps|note|aide):/.test(suite)) return;
     var indent = suite.match(/^(\s*)/)[1].length;
     if(indent !== colonne){
       ko("ligne " + (i + d + 1) + " : indentation " + indent + " au lieu de " + colonne +
-         " (les lignes reps: et note: s'alignent sous le « i » de id:)");
+         " (les lignes reps:, note: et aide: s'alignent sous le « i » de id:)");
     }
   });
 });
@@ -163,6 +174,14 @@ if(prog){
               "(band:true/false n'est toléré que dans les programmes hérités)");
       }
 
+      if(e.aide === undefined){
+        attention(ou + " : pas de champ aide — la carte n'aura pas de bouton « Comment faire ? »");
+      } else if(typeof e.aide !== "string" || !e.aide){
+        ko(ou + " : aide doit être une chaîne, la clé d'une entrée de aides.js");
+      } else if(Object.keys(AIDES).length && !AIDES[e.aide]){
+        ko(ou + ' : aide "' + e.aide + '" absente de aides.js');
+      }
+
       if(typeof e.note !== "string" || !e.note) ko(ou + " : note manquante");
       else {
         if(e.note.length > 120) ko(ou + " : note de " + e.note.length + " caractères — une phrase, lue sur un téléphone");
@@ -216,6 +235,13 @@ if(html.indexOf('programmes/' + base) === -1){
 }
 if(sw.indexOf('"./programmes/' + base + '"') === -1){
   ko('sw.js ne liste pas le fichier dans ASSETS : ajouter "./programmes/' + base + '"');
+}
+
+if(html.indexOf('src="aides.js"') === -1){
+  ko('index.html ne charge pas aides.js : ajouter <script src="aides.js"></script>');
+}
+if(sw.indexOf('"./aides.js"') === -1){
+  ko('sw.js ne liste pas aides.js dans ASSETS : ajouter "./aides.js"');
 }
 
 var vSw = sw.match(/programme-v(\d+)/);

@@ -52,11 +52,13 @@ sa forme, conçois son contenu.
         exos:[
           {id:"x1", group:"Groupe", name:"Premier exercice",
            reps:"4 × 8", unit:"reps", charge:["kettlebell"],
-           note:"Le cue d'exécution, en une phrase."},
+           note:"Le cue d'exécution, en une phrase.",
+           aide:"premier-exercice"},
 
           {id:"x2", group:"Groupe · qualificatif", name:"Deuxième exercice",
            reps:"3 × 10–15", unit:"par bras", charge:["elastique"],
-           note:"Un seul repère à retenir, qui décrit le geste."}
+           note:"Un seul repère à retenir, qui décrit le geste.",
+           aide:"deuxieme-exercice"}
         ]
       },
       {
@@ -64,7 +66,8 @@ sa forme, conçois son contenu.
         exos:[
           {id:"x3", group:"Groupe", name:"Troisième exercice",
            reps:"3 × 45–60", unit:"secondes", charge:[],
-           note:"Ce que le corps fait, pas ce que le muscle ressent."}
+           note:"Ce que le corps fait, pas ce que le muscle ressent.",
+           aide:"troisieme-exercice"}
         ]
       }
     ]
@@ -81,10 +84,11 @@ sa forme, conçois son contenu.
 - **Guillemets doubles** partout. Pas de virgule finale après le dernier élément d'un tableau
   ou d'un objet.
 - **Commentaires des quatre premières clés alignés** en colonne, comme dans le modèle.
-- **Un exercice tient sur trois lignes**, toujours découpées de la même façon :
+- **Un exercice tient sur quatre lignes**, toujours découpées de la même façon :
   1. `{id:…, group:…, name:…,`
   2. ` reps:…, unit:…, charge:…,` — alignée sous le `i` de `id` (11 espaces)
-  3. ` note:…},` — même alignement
+  3. ` note:…,` — même alignement
+  4. ` aide:…},` — même alignement
 - **Une ligne vide entre deux exercices**, aucune après le dernier.
 - **Typographie française** : `×` (U+00D7) pour la multiplication, `–` (tiret demi-cadratin)
   pour les fourchettes, `·` pour les séparateurs de `group`, et l'apostrophe **droite** `'` —
@@ -103,6 +107,7 @@ sa forme, conçois son contenu.
 | `unit` | chaîne | Affiché sous les reps. Valeurs utilisées : `"reps"`, `"par jambe"`, `"par bras"`, `"par côté"`, `"secondes"`. |
 | `charge` | tableau | Le matériel de l'exercice, dans l'ordre d'affichage : `["elastique"]`, `["kettlebell"]`, `["kettlebell","elastique"]`, ou `[]` ⇒ « Poids du corps ». Un bloc de réglage mémorisé par matériel. |
 | `band` | booléen | **Hérité, à ne plus écrire.** `01-elastique.js` l'utilise encore : `true` vaut `["elastique"]`, `false` vaut `[]`. Jamais `charge` et `band` sur le même exercice. |
+| `aide` | chaîne | Clé d'une entrée de `aides.js` — le contenu du bouton « Comment faire ? ». Réutilise la clé d'un exercice déjà documenté plutôt que d'écrire deux fois le même texte. Clé absente du catalogue ⇒ pas de bouton, sans erreur. |
 | `note` | chaîne | **Une phrase, un seul cue**, en langage courant — elle est lue par un débutant, seul, à 7 h du matin. Décris le geste, pas la sensation. Pas de paragraphe : la carte se lit sur un téléphone. |
 
 ### Points d'attention
@@ -129,6 +134,50 @@ sa forme, conçois son contenu.
 - **Aucune donnée personnelle dans le fichier** — il est commité, le dépôt est public. Pas de
   poids de corps, pas d'âge, pas de jour de la semaine dans une `note`.
 
+## Le fichier `aides.js`
+
+Un programme livré sans ses aides est un programme à moitié livré : la `note` d'une carte tient
+en une phrase, tout le reste — installation, déroulé, réglage, erreurs — vit dans `aides.js`.
+
+Une entrée, indexée par la clé que porte le champ `aide` :
+
+```js
+  A["rowing-un-bras"] = {
+    titre:"Rowing kettlebell à un bras",
+    resume:"Une phrase : à quoi sert l'exercice, ou le piège principal.",
+    installation:[
+      "Une étape par entrée, à l'impératif, dans l'ordre chronologique.",
+      "Tout ce qu'il faut placer AVANT de bouger : matériel, appuis, position de départ."
+    ],
+    mouvement:[
+      "Le geste, décomposé. Où va le coude, ce qui bouge, ce qui ne bouge pas.",
+      "Toujours dire où se placent les récups et si l'exercice se fait des deux côtés."
+    ],
+    reglage:[
+      "Trop dur : …",
+      "Trop facile : … — pour un élastique, cumuler ; pour une kettlebell unique, tempo et densité."
+    ],
+    rate:[
+      "Le signe visible ou ressenti que l'exécution est fausse, et quoi faire."
+    ],
+    pourquoi:"Une ou deux phrases : ce que l'exercice apporte, et pourquoi il est à cette place."
+  };
+```
+
+Règles :
+
+- **Les cinq champs de liste sont obligatoires**, `pourquoi` compris. Une aide amputée se
+  remarque tout de suite sur le téléphone.
+- **Une clé par exercice réel, pas par ligne de programme.** Les pompes apparaissent dans deux
+  programmes : une seule entrée `pompes`, référencée deux fois.
+- **Clés en minuscules, sans accent, tirets comme séparateurs** : `rowing-un-bras`.
+- **Ton identique aux `note`** : on décrit un geste, jamais une sensation, et on écrit pour
+  quelqu'un qui lit seul, à 7 h du matin, sans rien savoir.
+- **Aucune donnée personnelle** : le fichier est commité. Pas de poids de corps, pas de jour de
+  la semaine, pas de poids de kettlebell en kilos. Si un exercice suppose un matériel qu'on peut
+  ne pas avoir (point d'ancrage, barre), écris la condition — « sans point d'ancrage, remplace
+  par… » — jamais l'instanciation.
+
 ## Avant de toucher au moindre fichier
 
 **Un programme existant ne se modifie que sur demande explicite** (voir `SKILL.md`). La
@@ -152,11 +201,13 @@ Dans cet ordre, **dans le même commit** :
    sélecteur).
 2. Ajouter `<script src="programmes/NN-nom.js"></script>` dans `index.html`, à côté des autres,
    **avant** le `<script>` applicatif. L'ordre des `<script>` est l'ordre du sélecteur.
-3. Ajouter `"./programmes/NN-nom.js"` au tableau `ASSETS` de `sw.js`.
-4. **Bumper les deux versions** : `var CACHE = "programme-vN";` dans `sw.js` **et**
+3. Écrire dans `aides.js` l'entrée de chaque exercice qui n'en a pas encore, et relier chaque
+   exercice par son champ `aide`.
+4. Ajouter `"./programmes/NN-nom.js"` au tableau `ASSETS` de `sw.js`.
+5. **Bumper les deux versions** : `var CACHE = "programme-vN";` dans `sw.js` **et**
    `<p class="saved">version N</p>` dans `index.html`. Sans ça, les appareils gardent l'ancienne
    version en cache.
-5. Vérifier : `python3 -m http.server 8000`, puis `http://localhost:8000`.
+6. Vérifier : `python3 -m http.server 8000`, puis `http://localhost:8000`.
 
 ## Contrôle avant de rendre
 
@@ -193,4 +244,6 @@ Puis, dans le navigateur :
 - Sur un exercice kettlebell, cocher un poids puis recharger : il persiste, et cocher un autre
   poids remplace le premier au lieu de s'y ajouter.
 - Sur un exercice `charge:[]`, la carte affiche « Poids du corps » et aucun sélecteur.
+- Le bouton « Comment faire ? » ouvre le bon exercice, les cinq sections sont là, et « Fermer »
+  ramène au même endroit dans la liste.
 - Les réglages de l'autre programme n'ont pas bougé.

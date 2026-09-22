@@ -118,8 +118,16 @@ l'exception ci-dessus). Ne réécris jamais le gabarit de mémoire : l'indentati
 commentaires, l'absence d'espace après les `:`, la ligne vide entre deux exercices et le
 découpage d'un exercice sur trois lignes sont tous significatifs.
 
+**Un programme ne se livre jamais sans ses aides.** La `note` d'une carte tient en une phrase —
+c'est tout ce qui rentre sur un téléphone. Le reste (installation, déroulé pas à pas, réglage de
+la difficulté, signes d'une exécution ratée, raison d'être) va dans `aides.js`, et chaque
+exercice s'y relie par son champ `aide`. Un exercice sans aide, c'est une carte sans bouton
+« Comment faire ? » : le pratiquant est seul devant un nom d'exercice à 7 h du matin. Le format
+d'une entrée est dans `references/format-programme.md`.
+
 Avant de rendre, lance le vérificateur. Il attrape en une seconde tout ce qui est mécanique —
-erreur de syntaxe, `id` dupliqué, `unit` hors liste, `charge` incohérente, fichier non déclaré dans
+erreur de syntaxe, `id` dupliqué, `unit` hors liste, `charge` incohérente, clé `aide`
+introuvable, fichier non déclaré dans
 `index.html` ou dans `sw.js`, versions non bumpées :
 
 ```sh
@@ -228,7 +236,7 @@ Lis ces fichiers au moment où tu en as besoin, pas tous d'un coup :
 | Fichier | Quand le lire |
 |---|---|
 | `references/programmation.md` | Construire ou réviser une semaine, doser volume et intensité, gérer la récupération et les deloads. |
-| `references/exercices.md` | Choisir, remplacer, régresser ou progresser un exercice ; récupérer un cue d'exécution prêt à l'emploi. |
+| `references/exercices.md` | Choisir, remplacer, régresser ou progresser un exercice ; récupérer un cue d'exécution prêt à l'emploi. C'est aussi la matière première d'une entrée de `aides.js`. |
 | `references/format-programme.md` | Dès que le résultat doit atterrir dans l'app : créer ou modifier un `programmes/*.js`. Contrat de format + checklist d'installation. |
 | `scripts/verifier-programme.js` | À lancer sur tout fichier `programmes/*.js` créé ou modifié, avant de rendre. |
 
