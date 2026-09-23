@@ -160,7 +160,8 @@
       "Assieds-toi au sol, jambes tendues devant toi.",
       "Fléchis légèrement les genoux, 10 à 15 degrés. Jambes trop tendues le matin, ce sont les ischios qui tirent et le bas du dos qui s'arrondit.",
       "Passe l'élastique autour de la voûte des deux pieds, pas autour des orteils.",
-      "Saisis la boucle à deux mains, bras tendus devant. Plus tes mains sont près de tes pieds, plus c'est dur."
+      "PLIAGE EN 8 : vrille la boucle d'un demi-tour à mi-chemin entre tes pieds et tes mains, puis passe une main dans chaque moitié. Sa longueur de travail est divisée par deux, donc la tension double — c'est le réglage que les élastiques à poignées ne permettent pas.",
+      "Saisis la boucle bras tendus devant toi. Plus tes mains sont près de tes pieds, plus c'est dur : c'est ton réglage fin, par-dessus le pliage."
     ],
     mouvement:[
       "Tire les mains vers le bas de tes côtes, au niveau du nombril — pas vers la poitrine.",
@@ -170,7 +171,8 @@
     ],
     reglage:[
       "Trop dur : élastique plus souple, ou avance tes mains pour le rallonger.",
-      "Trop facile : cumule un deuxième élastique, ou vrille la boucle en 8 et mets une main dans chaque moitié — tu divises sa longueur par deux d'un coup.",
+      "Trop facile : passe au pliage en 8 décrit plus haut — essaie-le avant de cumuler un deuxième élastique, c'est plus progressif.",
+      "Toujours trop facile, pliage en 8 compris : cumule un deuxième élastique.",
       "Bas du dos qui tire : assieds-toi sur un coussin ou une serviette pliée."
     ],
     rate:[
