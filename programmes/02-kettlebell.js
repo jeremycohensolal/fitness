@@ -31,7 +31,7 @@
            aide:"fentes-arriere"},
 
           {id:"k4", group:"Tronc · unilatéral", name:"Gainage latéral",
-           reps:"3 × 25 s", unit:"par côté", charge:[],
+           reps:"3 séries", unit:"par côté", charge:[], durees:[20,25,30,45],
            note:"Appui sur l'avant-bras, hanches hautes, corps en ligne.",
            aide:"gainage-lateral"}
         ]
@@ -60,7 +60,7 @@
            aide:"curl-biceps"},
 
           {id:"k9", group:"Portés · anti-flexion", name:"Marche valise",
-           reps:"2 × 30 s", unit:"par côté", charge:["kettlebell"],
+           reps:"2 séries", unit:"par côté", charge:["kettlebell"], durees:[30,45,60],
            note:"Une seule kettlebell d'un côté, tu marches sans te laisser pencher.",
            aide:"marche-valise"}
         ]

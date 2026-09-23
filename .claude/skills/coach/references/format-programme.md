@@ -108,6 +108,7 @@ sa forme, conçois son contenu.
 | `charge` | tableau | Le matériel de l'exercice, dans l'ordre d'affichage : `["elastique"]`, `["kettlebell"]`, `["kettlebell","elastique"]`, ou `[]` ⇒ « Poids du corps ». Un bloc de réglage mémorisé par matériel. |
 | `band` | booléen | **Hérité, à ne plus écrire.** `01-elastique.js` l'utilise encore : `true` vaut `["elastique"]`, `false` vaut `[]`. Jamais `charge` et `band` sur le même exercice. |
 | `aide` | chaîne | Clé d'une entrée de `aides.js` — le contenu du bouton « Comment faire ? ». Réutilise la clé d'un exercice déjà documenté plutôt que d'écrire deux fois le même texte. Clé absente du catalogue ⇒ pas de bouton, sans erreur. |
+| `durees` | tableau | **Optionnel, pour un exercice tenu en temps.** Les paliers de secondes proposés, ex. `[30,45,60]`. L'app en affiche un sélecteur exclusif, et mémorise le choix. Trois à cinq paliers, pas plus. |
 | `note` | chaîne | **Une phrase, un seul cue**, en langage courant — elle est lue par un débutant, seul, à 7 h du matin. Décris le geste, pas la sensation. Pas de paragraphe : la carte se lit sur un téléphone. |
 
 ### Points d'attention
@@ -127,6 +128,11 @@ sa forme, conçois son contenu.
   et même sur un même exercice (`charge:["kettlebell","elastique"]` affiche les deux blocs).
   Ne t'en sers que si l'exercice combine vraiment les deux.
 - `charge:[]` pour le poids du corps : aucun sélecteur, la carte affiche « Poids du corps ».
+- **Un exercice tenu en temps ne chiffre pas sa durée dans `reps`.** Il porte `durees:[…]`, et
+  `reps` se réduit au nombre de séries : `reps:"2 séries", unit:"par côté", durees:[30,45,60]`.
+  La durée devient alors un réglage que le pratiquant coche et que l'app mémorise — donc un
+  levier de progression visible, au lieu d'un chiffre figé dans le texte. Choisis les paliers :
+  ils disent jusqu'où on peut monter.
 - `rule` est le seul endroit de l'app où le temps de repos est écrit : il doit y être
   **chiffré** (`"25 min · repos 60 s"`), jamais « repos court ».
 - **Les côtés passent par `unit`**, pas par la note : `"par jambe"`, `"par bras"`, `"par côté"`.

@@ -84,7 +84,8 @@ kettlebell. Le profil et le planning, eux, ne sont pas dans le skill — ils se 
   le `<title>`, `rule` le bandeau noir.
 - Une séance = `{id, tab, label, exos}` — `tab` et `label` sont les deux lignes de l'onglet.
   Le nombre de séances est libre (1, 2, 3…) ; les onglets sont générés à partir de cette liste.
-- Un exercice = `{id, group, name, reps, unit, charge, note, aide}`. `charge` liste le matériel :
+- Un exercice = `{id, group, name, reps, unit, charge, note, aide}`, plus `durees` s'il se
+  tient en temps. `charge` liste le matériel :
   `["elastique"]`, `["kettlebell"]`, les deux (un bloc de réglage par matériel, dans cet ordre),
   ou `[]` ⇒ affiche « Poids du corps ».
 - **`band` est l'ancien champ, conservé pour les programmes antérieurs** : `band:true` vaut
@@ -101,10 +102,15 @@ kettlebell. Le profil et le planning, eux, ne sont pas dans le skill — ils se 
   « Comment faire ? ». Deux programmes qui partagent un exercice partagent la même clé : on ne
   duplique jamais le texte. Clé absente du catalogue ⇒ la carte n'affiche pas de bouton, sans
   erreur. Une entrée = `{titre, resume, installation[], mouvement[], reglage[], rate[], pourquoi}`.
+- `durees` (optionnel) = la liste des paliers de secondes proposés, ex. `[30,45,60]`. L'app
+  affiche un sélecteur « Durée » exclusif, sur le modèle des kettlebells. Quand `durees` est
+  présent, `reps` ne porte plus que le nombre de séries (`"2 séries"`) : la durée vient du
+  sélecteur, pas du texte.
 - Clés `localStorage`, toutes préfixées par le programme :
   `prog.current` (id du programme affiché), `prog.ticks.<progId>` (`{date, done}`, remis à zéro
   chaque jour), `prog.band.<progId>.<exoId>` (liste d'ids d'élastiques),
-  `prog.kb.<progId>.<exoId>` (un poids de kettlebell), `prog.tab.<progId>`.
+  `prog.kb.<progId>.<exoId>` (un poids de kettlebell),
+  `prog.duree.<progId>.<exoId>` (une durée en secondes), `prog.tab.<progId>`.
 - `prog.migrated.v6` marque la migration unique depuis les anciennes clés non préfixées
   (`prog.ticks`, `prog.band.<exoId>`, `prog.tab`). Ne pas supprimer ce code tant que des
   téléphones peuvent encore porter l'ancien stockage.

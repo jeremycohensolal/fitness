@@ -321,9 +321,10 @@
     color:var(--ink-soft);
   }
 
-  /* ---------- Kettlebell ---------- */
+  /* ---------- Kettlebell et durées ---------- */
 
-  .kb{
+  .kb,
+  .sec{
     appearance:none;
     cursor:pointer;
     padding:0;
@@ -342,7 +343,10 @@
     transition:background-color .12s ease, transform .12s ease;
   }
 
-  .kb[aria-pressed="true"]{
+  .sec{max-width:72px;}
+
+  .kb[aria-pressed="true"],
+  .sec[aria-pressed="true"]{
     background:var(--ink);
     color:var(--paper);
     transform:scale(1.04);
@@ -516,7 +520,7 @@
 
 <div class="actions">
   <button id="reset-ticks">Décocher tous les exercices</button>
-  <button id="reset-charges" class="danger">Effacer les charges mémorisées</button>
+  <button id="reset-charges" class="danger">Effacer les réglages mémorisés</button>
 </div>
 
 <!-- Panneau d'aide : rempli en JS à l'ouverture, vide le reste du temps. -->
@@ -528,7 +532,7 @@
 </div>
 
 <p class="saved" id="saved"></p>
-<p class="saved">version 9</p>
+<p class="saved">version 10</p>
 
 <!-- Aides d'exercice, partagées par tous les programmes. -->
 <script src="aides.js"></script>
@@ -641,6 +645,7 @@
 
   function bandKey(exoId){ return "prog.band." + prog.id + "." + exoId; }
   function kbKey(exoId){ return "prog.kb." + prog.id + "." + exoId; }
+  function dureeKey(exoId){ return "prog.duree." + prog.id + "." + exoId; }
   function ticksKey(){ return "prog.ticks." + prog.id; }
   function tabKey(){ return "prog.tab." + prog.id; }
 
@@ -684,6 +689,17 @@
   function setKb(id, poids){
     if(poids){ store.set(kbKey(id), poids); } else { store.remove(kbKey(id)); }
     flash(poids ? "Kettlebell enregistrée" : "Kettlebell effacée");
+  }
+
+  /* Exercices tenus en temps : le programme propose les durées, on en coche une. */
+
+  function getDuree(id){
+    return store.get(dureeKey(id)) || "";
+  }
+
+  function setDuree(id, valeur){
+    if(valeur){ store.set(dureeKey(id), valeur); } else { store.remove(dureeKey(id)); }
+    flash(valeur ? "Durée enregistrée" : "Durée effacée");
   }
 
   var flashTimer = null;
@@ -874,6 +890,35 @@
     return row;
   }
 
+  function rowDurees(exo){
+    var row = buildRow("Durée");
+    var boutons = [];
+
+    exo.durees.forEach(function(d){
+      var val = String(d);
+      var btn = document.createElement("button");
+      btn.className = "sec";
+      btn.type = "button";
+      btn.dataset.duree = val;
+      btn.textContent = val + " s";
+      btn.setAttribute("aria-label", val + " secondes — " + exo.name);
+      btn.setAttribute("aria-pressed", getDuree(exo.id) === val ? "true" : "false");
+
+      btn.addEventListener("click", function(){
+        var choisie = getDuree(exo.id) === val ? "" : val;
+        setDuree(exo.id, choisie);
+        boutons.forEach(function(b){
+          b.setAttribute("aria-pressed", b.dataset.duree === choisie ? "true" : "false");
+        });
+      });
+
+      boutons.push(btn);
+      row.appendChild(btn);
+    });
+
+    return row;
+  }
+
   /* ---------- Rendu ---------- */
 
   function buildExo(exo){
@@ -946,6 +991,7 @@
     if(!kit.length){ card.appendChild(rowPoidsDuCorps()); }
     if(kit.indexOf("elastique") !== -1){ card.appendChild(rowElastiques(exo)); }
     if(kit.indexOf("kettlebell") !== -1){ card.appendChild(rowKettlebell(exo)); }
+    if(exo.durees && exo.durees.length){ card.appendChild(rowDurees(exo)); }
 
     return card;
   }
@@ -1058,15 +1104,16 @@
   });
 
   document.getElementById("reset-charges").addEventListener("click", function(){
-    if(!window.confirm("Effacer toutes les charges mémorisées de ce programme ?")){ return; }
+    if(!window.confirm("Effacer tous les réglages mémorisés de ce programme ?")){ return; }
     prog.seances.forEach(function(s){
       s.exos.forEach(function(e){
         store.remove(bandKey(e.id));
         store.remove(kbKey(e.id));
+        store.remove(dureeKey(e.id));
       });
     });
     render();
-    flash("Charges effacées");
+    flash("Réglages effacés");
   });
 
   render();

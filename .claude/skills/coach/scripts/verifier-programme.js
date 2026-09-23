@@ -86,7 +86,7 @@ if(source.indexOf('"use strict";') === -1){
 if(source.indexOf("window.PROGRAMMES = window.PROGRAMMES || [];") === -1){
   ko("il manque la ligne window.PROGRAMMES = window.PROGRAMMES || [];");
 }
-if(/\b(id|group|name|reps|unit|charge|band|note|aide|tab|label|title|rule|seances|exos):\s/.test(source)){
+if(/\b(id|group|name|reps|unit|charge|durees|band|note|aide|tab|label|title|rule|seances|exos):\s/.test(source)){
   ko("espace après des deux-points : écrire id:\"k1\", jamais id: \"k1\"");
 }
 if(/,(\s*[\]}])/.test(source)){
@@ -147,10 +147,33 @@ if(prog){
       if(!e.group) ko(ou + " : group manquant");
       if(!e.name) ko(ou + " : name manquant");
 
+      var minute = e.durees !== undefined;
+
       if(typeof e.reps !== "string") ko(ou + " : reps doit être une chaîne, pas un nombre");
       else {
-        if(e.reps.indexOf("×") === -1) ko(ou + ' : reps doit utiliser × (U+00D7), pas "x"');
+        /* Exercice tenu en temps : reps ne porte que le nombre de séries,
+           la durée se choisit dans le sélecteur. */
+        if(minute){
+          if(!/^\d+ séries?$/.test(e.reps)){
+            ko(ou + ' : avec durees, reps ne porte que les séries — "3 séries"');
+          }
+        } else if(e.reps.indexOf("×") === -1){
+          ko(ou + ' : reps doit utiliser × (U+00D7), pas "x"');
+        }
         if(e.reps.indexOf("-") !== -1) ko(ou + " : fourchette avec – (tiret demi-cadratin), pas -");
+      }
+
+      if(minute){
+        if(!Array.isArray(e.durees) || !e.durees.length){
+          ko(ou + " : durees doit être un tableau non vide de secondes, ex. durees:[30,45,60]");
+        } else {
+          e.durees.forEach(function(d){
+            if(typeof d !== "number" || d <= 0 || d !== Math.round(d)){
+              ko(ou + " : durée « " + d + " » — des entiers de secondes seulement");
+            }
+          });
+          if(e.durees.length > 5) attention(ou + " : " + e.durees.length + " durées — au-delà de 5 pastilles, c'est serré sur mobile");
+        }
       }
 
       if(UNITES.indexOf(e.unit) === -1){

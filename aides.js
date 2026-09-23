@@ -70,7 +70,7 @@
     titre:"Fentes arrière",
     resume:"L'exercice de jambes le plus rentable : une jambe à la fois, donc deux fois la charge.",
     installation:[
-      "Debout, pieds joints. Tiens la kettlebell contre ta poitrine, ou tiens les poignées de l'élastique aux épaules en étant debout dessus.",
+      "Debout, pieds joints. Tiens la kettlebell contre ta poitrine — ou, sans kettlebell, debout au milieu de la boucle que tu tiens aux épaules.",
       "Grandis-toi, regard droit devant."
     ],
     mouvement:[
@@ -109,7 +109,8 @@
     ],
     reglage:[
       "Trop dur : plie les genoux à 90 degrés et prends appui sur le genou du dessous.",
-      "Trop facile : monte à 40 secondes, puis lève la jambe du dessus."
+      "La durée se coche sur la carte, et elle est mémorisée : monte d'un palier quand le précédent passe sans que les hanches descendent.",
+      "Trop facile au dernier palier : lève la jambe du dessus."
     ],
     rate:[
       "Tes hanches redescendent vers le sol : arrête, c'est fini pour cette série.",
@@ -159,17 +160,17 @@
       "Assieds-toi au sol, jambes tendues devant toi.",
       "Fléchis légèrement les genoux, 10 à 15 degrés. Jambes trop tendues le matin, ce sont les ischios qui tirent et le bas du dos qui s'arrondit.",
       "Passe l'élastique autour de la voûte des deux pieds, pas autour des orteils.",
-      "Une poignée dans chaque main, bras tendus devant. Assieds-toi bien droit, poitrine haute."
+      "Saisis la boucle à deux mains, bras tendus devant. Plus tes mains sont près de tes pieds, plus c'est dur."
     ],
     mouvement:[
-      "Tire les poignées vers le bas de tes côtes, au niveau du nombril — pas vers la poitrine.",
+      "Tire les mains vers le bas de tes côtes, au niveau du nombril — pas vers la poitrine.",
       "Les coudes filent vers l'arrière en frôlant tes flancs.",
       "En fin de course, serre les omoplates comme si tu coinçais un crayon entre les deux.",
       "Reviens lentement, bras complètement tendus, sans arrondir le dos ni bouger le buste."
     ],
     reglage:[
       "Trop dur : élastique plus souple, ou avance tes mains pour le rallonger.",
-      "Trop facile : cumule un deuxième élastique, ou enroule un tour autour de chaque main.",
+      "Trop facile : cumule un deuxième élastique, ou vrille la boucle en 8 et mets une main dans chaque moitié — tu divises sa longueur par deux d'un coup.",
       "Bas du dos qui tire : assieds-toi sur un coussin ou une serviette pliée."
     ],
     rate:[
@@ -185,7 +186,7 @@
     titre:"Tirage écarté",
     resume:"Tu ne fixes l'élastique nulle part : tes deux mains sont les points d'ancrage.",
     installation:[
-      "Une poignée dans chaque main.",
+      "Saisis la boucle à deux mains, écartées d'environ la largeur des épaules.",
       "Tends les bras devant toi, à hauteur d'épaules, paumes face à face.",
       "L'élastique passe devant ta poitrine, légèrement tendu au départ."
     ],
@@ -225,8 +226,9 @@
     ],
     reglage:[
       "Pas la place de marcher : fais des allers-retours sur 4 ou 5 pas, ou reste immobile debout — c'est aussi valable.",
-      "Trop dur : descends à 20 secondes par côté.",
-      "Trop facile : monte à 45 secondes, ou ralentis tes pas."
+      "La durée se coche sur la carte, et elle est mémorisée : c'est ton levier de progression.",
+      "Trop facile : passe au palier de durée suivant, puis ralentis tes pas.",
+      "Palier suivant, quand 60 s passent sans effort : la kettlebell tenue à l'envers, cloche vers le ciel. Même poids, difficulté sans commune mesure."
     ],
     rate:[
       "Tu te penches du côté de la kettlebell : c'est l'erreur principale, tout l'exercice consiste à ne pas le faire.",
@@ -242,7 +244,7 @@
     resume:"Exercice d'isolation, le premier à sacrifier si tu débordes des 25 minutes.",
     installation:[
       "Debout au milieu de l'élastique, pieds écartés à la largeur des hanches.",
-      "Une poignée dans chaque main, bras le long du corps, paumes tournées vers l'avant."
+      "Saisis la boucle à deux mains, bras le long du corps, paumes tournées vers l'avant."
     ],
     mouvement:[
       "Monte les mains vers les épaules en pliant seulement les coudes.",
@@ -318,8 +320,8 @@
     titre:"Écarté à l'élastique",
     resume:"Attention : ici tu RAPPROCHES les mains, élastique dans le dos. C'est l'inverse du tirage écarté.",
     installation:[
-      "Passe l'élastique dans ton dos, au niveau des omoplates.",
-      "Une poignée dans chaque main.",
+      "Passe la boucle dans ton dos, au niveau des omoplates.",
+      "Saisis-la à deux mains, de part et d'autre de ton buste.",
       "Debout, bras tendus sur les côtés, à hauteur d'épaules."
     ],
     mouvement:[
@@ -370,7 +372,7 @@
     resume:"C'est ce mouvement qui donne la largeur d'épaules. Charge légère obligatoire.",
     installation:[
       "Debout au milieu de l'élastique, pieds serrés.",
-      "Une poignée dans chaque main, bras le long du corps, paumes tournées vers l'intérieur."
+      "Saisis la boucle à deux mains, bras le long du corps, paumes tournées vers l'intérieur."
     ],
     mouvement:[
       "Lève les bras sur les côtés, coudes à peine fléchis, jusqu'à l'horizontale.",
@@ -396,7 +398,7 @@
     resume:"Une pompe debout : même mouvement, sans avoir à porter son poids de corps.",
     installation:[
       "Passe l'élastique dans ton dos, au niveau des omoplates.",
-      "Une poignée dans chaque main, mains au niveau de la poitrine, coudes vers l'arrière.",
+      "Saisis la boucle à deux mains, au niveau de la poitrine, coudes vers l'arrière.",
       "Un pied légèrement en avant pour la stabilité."
     ],
     mouvement:[
@@ -420,7 +422,7 @@
     resume:"Poussée verticale. À ne jamais mettre en tout premier exercice le matin.",
     installation:[
       "Debout au milieu de l'élastique, pieds largeur de hanches.",
-      "Une poignée dans chaque main, mains au niveau des épaules, paumes vers l'avant.",
+      "Saisis la boucle à deux mains, au niveau des épaules, paumes vers l'avant.",
       "Serre les fessiers et le ventre avant de pousser."
     ],
     mouvement:[
@@ -445,7 +447,7 @@
     installation:[
       "Accroche l'élastique à un point fixe solide, à hauteur de visage.",
       "Sans point d'ancrage disponible, remplace cet exercice par le tirage écarté : même travail, rien à accrocher.",
-      "Une poignée dans chaque main, recule jusqu'à mettre l'élastique en tension, bras tendus devant toi."
+      "Saisis la boucle à deux mains, recule jusqu'à la mettre en tension, bras tendus devant toi."
     ],
     mouvement:[
       "Tire les mains vers ton visage en gardant les coudes HAUTS, au niveau des épaules.",
@@ -493,7 +495,7 @@
     resume:"Le mouvement de jambes de base, chargé par l'élastique sous les pieds.",
     installation:[
       "Debout au milieu de l'élastique, pieds largeur d'épaules, pointes légèrement vers l'extérieur.",
-      "Remonte les poignées jusqu'à tes épaules et tiens-les là, coudes vers l'avant."
+      "Remonte la boucle jusqu'à tes épaules et tiens-la à deux mains, coudes vers l'avant."
     ],
     mouvement:[
       "Descends en poussant les fesses vers l'arrière et les genoux vers l'extérieur.",
@@ -518,7 +520,7 @@
     installation:[
       "Place une chaise derrière toi.",
       "Pose le dessus du pied arrière sur l'assise, jambe avant à un grand pas devant.",
-      "Si tu charges : debout sur l'élastique avec le pied avant, poignées aux épaules."
+      "Si tu charges : pied avant sur la boucle, que tu tiens aux épaules à deux mains."
     ],
     mouvement:[
       "Descends à la verticale en pliant la jambe avant, genou arrière vers le sol.",
@@ -543,7 +545,7 @@
     resume:"Charnière de hanche pour les ischios et les fessiers. Jamais en premier exercice au lever.",
     installation:[
       "Debout au milieu de l'élastique, pieds largeur de hanches.",
-      "Passe les poignées derrière ta nuque, sur le haut des épaules.",
+      "Passe la boucle derrière ta nuque, sur le haut des épaules.",
       "Genoux très légèrement fléchis, et ils ne bougeront plus."
     ],
     mouvement:[
@@ -591,7 +593,7 @@
     titre:"Tirage de côté",
     resume:"Flexion latérale contrôlée, un côté après l'autre.",
     installation:[
-      "Debout sur l'élastique avec un seul pied, une poignée dans la main du même côté.",
+      "Debout sur la boucle avec un seul pied, l'autre extrémité saisie dans la main du même côté.",
       "L'autre main sur la hanche ou derrière la tête.",
       "Tiens-toi bien droit au départ."
     ],

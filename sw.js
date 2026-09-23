@@ -7,7 +7,7 @@
    de CACHE.
 */
 
-var CACHE = "programme-v9";
+var CACHE = "programme-v10";
 
 var ASSETS = [
   "./",

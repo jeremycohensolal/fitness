@@ -56,7 +56,7 @@
         exos:[
           {id:"b1", group:"Jambes", name:"Squat",
            reps:"3 × 12–15", unit:"reps", band:true,
-           note:"Debout sur l'élastique, poignées aux épaules.",
+           note:"Debout au milieu de la boucle, que tu tiens aux épaules.",
            aide:"squat-elastique"},
 
           {id:"b2", group:"Jambes · unilatéral", name:"Fentes arrière",
@@ -66,7 +66,7 @@
 
           {id:"b3", group:"Jambes · unilatéral", name:"Squat bulgare",
            reps:"3 × 8–10", unit:"par jambe", band:true,
-           note:"Pied arrière sur une chaise. Debout sur l'élastique, poignées aux épaules.",
+           note:"Pied arrière sur une chaise. Pied avant sur la boucle, tenue aux épaules.",
            aide:"squat-bulgare"},
 
           {id:"b4", group:"Chaîne postérieure", name:"Good morning",
