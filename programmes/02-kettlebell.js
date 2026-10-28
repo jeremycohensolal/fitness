@@ -83,10 +83,10 @@
            note:"Debout sur l'élastique, tu pousses vers le plafond sans cambrer.",
            aide:"developpe-tete"},
 
-          {id:"k14", group:"Épaules · isolation", name:"Élévation latérale",
-           reps:"3 × 15", unit:"reps", charge:["elastique"],
-           note:"Debout sur l'élastique, tu lèves les bras sur les côtés jusqu'à l'horizontale.",
-           aide:"elevation-laterale"}
+          {id:"k13", group:"Poussée · isolation", name:"Écarté à l'élastique",
+           reps:"3 × 12", unit:"reps", charge:["elastique"],
+           note:"Élastique dans le dos, bras tendus, tu rapproches les mains devant toi.",
+           aide:"ecarte-poitrine"}
         ]
       }
     ]
